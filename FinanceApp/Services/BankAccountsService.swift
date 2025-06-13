@@ -13,7 +13,7 @@ protocol BankAccountsServiceProtocol {
 }
 
 final class BankAccountsService: BankAccountsServiceProtocol {
-    private let mockAccounts: [BankAccount] = [
+    private var mockAccounts: [BankAccount] = [
         BankAccount(
             id: 1,
             userId: 100,
@@ -39,7 +39,7 @@ final class BankAccountsService: BankAccountsServiceProtocol {
     }
     
     func updateBankAccount(_ account: BankAccount) async throws -> BankAccount {
-
+        mockAccounts[0] = account
         return account
     }
 }
