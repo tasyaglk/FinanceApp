@@ -11,32 +11,13 @@ struct Transaction: Identifiable, Codable {
     let id: Int?
     let accountId: Int?
     let categoryId: Int?
-    let amount: String?
-    let transactionDate: String?
+    let amount: Decimal?
+    let transactionDate: Date?
     let comment: String?
-    let createdAt: String?
-    let updatedAt: String?
-    var amountDecimal: Decimal? {
-        guard let amount = amount else { return nil }
-        return Decimal(string: amount)
-    }
+    let createdAt: Date?
+    let updatedAt: Date?
     
-    var transactionDateValue: Date? {
-        guard let transactionDate = transactionDate else { return nil }
-        return ISO8601DateFormatter().date(from: transactionDate)
-    }
-    
-    var createdAtDate: Date? {
-        guard let createdAt = createdAt else { return nil }
-        return ISO8601DateFormatter().date(from: createdAt)
-    }
-    
-    var updatedAtDate: Date? {
-        guard let updatedAt = updatedAt else { return nil }
-        return ISO8601DateFormatter().date(from: updatedAt)
-    }
-    
-    init(id: Int?, accountId: Int?, categoryId: Int?, amount: String?, transactionDate: String?, comment: String?, createdAt: String?, updatedAt: String?) {
+    init(id: Int?, accountId: Int?, categoryId: Int?, amount: Decimal?, transactionDate: Date?, comment: String?, createdAt: Date?, updatedAt: Date?) {
         self.id = id
         self.accountId = accountId
         self.categoryId = categoryId
@@ -50,24 +31,24 @@ struct Transaction: Identifiable, Codable {
 
 extension Transaction {
     static func parse(jsonObject: Any) -> Transaction? {
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: jsonObject)
-            return try JSONDecoder().decode(Transaction.self, from: jsonData)
-        } catch {
-            print("Parse error: \(error)")
-            return nil
-        }
+        guard
+            JSONSerialization.isValidJSONObject(jsonObject),
+            let data = try? JSONSerialization.data(withJSONObject: jsonObject)
+        else { return nil }
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        return try? decoder.decode(Transaction.self, from: data)
     }
     
     var jsonObject: Any {
-        do {
-            let jsonData = try JSONEncoder().encode(self)
-            var dict = try JSONSerialization.jsonObject(with: jsonData) as? [String: Any] ?? [:]
-            if comment == nil { dict["comment"] = nil }
-            return dict
-        } catch {
-            print("JsonObject error: \(error)")
-            return [:]
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        guard let data = try? encoder.encode(self),
+              var dict = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any]
+        else { return [:] }
+        dict.keys.forEach { key in
+            if dict[key] is NSNull { dict.removeValue(forKey: key) }
         }
+        return dict
     }
 }
