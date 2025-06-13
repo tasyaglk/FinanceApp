@@ -1,5 +1,5 @@
 //
-//  Account.swift
+//  BankAccount.swift
 //  FinanceApp
 //
 //  Created by Тася Галкина on 11.06.2025.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Account: Identifiable, Codable {
+struct BankAccount: Identifiable, Codable {
     let id: Int?
     let userId: Int?
     let name: String?
