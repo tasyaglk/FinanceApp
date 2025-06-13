@@ -17,7 +17,7 @@ extension Character: Codable {
         let container = try decoder.singleValueContainer()
         let string = try container.decode(String.self)
         guard string.count == 1, let character = string.first else {
-            throw DecodingError.dataCorruptedError(in: container, debugDescription: "expected only one emoji")
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "ожидалось только одно emoji")
         }
         self = character
     }
