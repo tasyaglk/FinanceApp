@@ -16,7 +16,7 @@ final class BankAccountsService: BankAccountsServiceProtocol {
     private var mockAccounts: [BankAccount] = [
         BankAccount(
             id: 1,
-            userId: 100,
+            userId: 1,
             name: "карта зп",
             balance: 50000,
             currency: "RUB",
@@ -25,7 +25,7 @@ final class BankAccountsService: BankAccountsServiceProtocol {
         ),
         BankAccount(
             id: 2,
-            userId: 100,
+            userId: 1,
             name: "карта для путешествий",
             balance: 100,
             currency: "USD",

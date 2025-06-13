@@ -60,7 +60,6 @@ final class TransactionExtensionTests: XCTestCase {
     }
     
     func testParseInvalidJson() {
-        // Given
         let json: Any = ["invalid": "data"]
         
         let transaction = Transaction.parse(jsonObject: json)
