@@ -109,3 +109,35 @@ extension Transaction {
         return dict
     }
 }
+
+extension Transaction {
+    static func parseCSV(_ csvString: String) -> Transaction? {
+        let line = csvString.components(separatedBy: ",").filter { !$0.isEmpty }
+        guard line.count >= 6 else { return nil }
+        
+        let dateFormatter = ISO8601DateFormatter()
+        
+        guard let id = Int(line[0]),
+              let accountId = Int(line[1]),
+              let categoryId = Int(line[2]),
+              let amount = line[3].isEmpty ? nil : Decimal(string: line[3]),
+              let transactionDate = line[4].isEmpty ? nil : dateFormatter.date(from: line[4]),
+              let comment = line[5].isEmpty ? nil : line[5],
+              let createdAt = line.isEmpty ? nil : dateFormatter.date(from: line[6]),
+              let updatedAt = line[7].isEmpty ? nil : dateFormatter.date(from: line[7])
+        else {
+            return nil
+        }
+        
+        return Transaction(
+            id: id,
+            accountId: accountId,
+            categoryId: categoryId,
+            amount: amount,
+            transactionDate: transactionDate,
+            comment: comment,
+            createdAt: createdAt,
+            updatedAt: updatedAt
+        )
+    }
+}
