@@ -30,7 +30,7 @@ final class TransactionsService: TransactionsServiceProtocol {
                 id: 1,
                 accountId: 1,
                 categoryId: 1,
-                amount: Decimal(string: "500.00"),
+                amount: 500.00,
                 transactionDate: Date(),
                 comment: "зп",
                 createdAt: Date(),
@@ -40,7 +40,7 @@ final class TransactionsService: TransactionsServiceProtocol {
                 id: 2,
                 accountId: 1,
                 categoryId: 2,
-                amount: Decimal(string: "200.50"),
+                amount: 200.50,
                 transactionDate: Date(),
                 comment: nil,
                 createdAt: Date(),
@@ -51,22 +51,18 @@ final class TransactionsService: TransactionsServiceProtocol {
     
     func fetchTransactions(from startDate: Date, to endDate: Date) async throws -> [Transaction] {
         return transactions.filter { transaction in
-            guard let date = transaction.transactionDate else { return false }
-            return date >= startDate && date <= endDate
+            return transaction.transactionDate >= startDate && transaction.transactionDate <= endDate
         }
     }
     
     func createTransaction(_ transaction: Transaction) async throws {
-        guard let id = transaction.id else {
-            throw TransactionsServiceError.invalidTransaction
-        }
         
-        if transactions.contains(where: { $0.id == id }) {
-            throw TransactionsServiceError.transactionExists(id: id)
+        if transactions.contains(where: { $0.id == transaction.id }) {
+            throw TransactionsServiceError.transactionExists(id: transaction.id)
         }
         
         let newTransaction = Transaction(
-            id: id,
+            id: transaction.id,
             accountId: transaction.accountId,
             categoryId: transaction.categoryId,
             amount: transaction.amount,
@@ -81,16 +77,12 @@ final class TransactionsService: TransactionsServiceProtocol {
     
     func updateTransaction(_ transaction: Transaction) async throws {
         
-        guard let id = transaction.id else {
-            throw TransactionsServiceError.invalidTransaction
-        }
-        
-        guard let index = transactions.firstIndex(where: { $0.id == id }) else {
-            throw TransactionsServiceError.transactionNotFound(id: id)
+        guard let index = transactions.firstIndex(where: { $0.id == transaction.id }) else {
+            throw TransactionsServiceError.transactionNotFound(id: transaction.id)
         }
         
         let updatedTransaction = Transaction(
-            id: id,
+            id: transaction.id,
             accountId: transaction.accountId,
             categoryId: transaction.categoryId,
             amount: transaction.amount,

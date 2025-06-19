@@ -28,8 +28,7 @@ final class TransactionsFileCache {
     }
     
     func addTransaction(_ transaction: Transaction) -> Bool {
-        guard let id = transaction.id else { return false }
-        guard !transactions.contains(where: { $0.id == id }) else { return false }
+        guard !transactions.contains(where: { $0.id == transaction.id }) else { return false }
         
         transactions.append(transaction)
         return true

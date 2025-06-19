@@ -8,15 +8,15 @@
 import Foundation
 
 struct BankAccount: Identifiable, Codable {
-    let id: Int?
-    let userId: Int?
-    let name: String?
-    let balance: Decimal?
-    let currency: String?
-    let createdAt: Date?
-    let updatedAt: Date?
+    let id: Int
+    let userId: Int
+    let name: String
+    let balance: Decimal
+    let currency: String
+    let createdAt: Date
+    let updatedAt: Date
     
-    init(id: Int? = nil, userId: Int? = nil, name: String? = nil, balance: Decimal? = nil, currency: String? = nil, createdAt: Date? = nil, updatedAt: Date? = nil) {
+    init(id: Int, userId: Int, name: String, balance: Decimal, currency: String, createdAt: Date, updatedAt: Date) {
         self.id = id
         self.userId = userId
         self.name = name
