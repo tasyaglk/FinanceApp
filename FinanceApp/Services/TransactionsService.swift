@@ -29,6 +29,26 @@ final class TransactionsService: TransactionsServiceProtocol {
             Transaction(
                 id: 1,
                 accountId: 1,
+                categoryId: 5,
+                amount: 500.00,
+                transactionDate: Date(),
+                comment: "красота",
+                createdAt: Date(),
+                updatedAt: Date()
+            ),
+            Transaction(
+                id: 2,
+                accountId: 1,
+                categoryId: 3,
+                amount: 200.50,
+                transactionDate: Date(),
+                comment: nil,
+                createdAt: Date(),
+                updatedAt: Date()
+            ),
+            Transaction(
+                id: 1,
+                accountId: 1,
                 categoryId: 1,
                 amount: 500.00,
                 transactionDate: Date(),
@@ -36,16 +56,6 @@ final class TransactionsService: TransactionsServiceProtocol {
                 createdAt: Date(),
                 updatedAt: Date()
             ),
-            Transaction(
-                id: 2,
-                accountId: 1,
-                categoryId: 2,
-                amount: 200.50,
-                transactionDate: Date(),
-                comment: nil,
-                createdAt: Date(),
-                updatedAt: Date()
-            )
         ]
     }
     

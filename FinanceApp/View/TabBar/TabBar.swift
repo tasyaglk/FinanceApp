@@ -8,9 +8,18 @@
 import SwiftUI
 
 struct TabBarView: View {
+    
+    init() {
+            let appearance = UITabBarAppearance()
+            appearance.backgroundColor = UIColor.white
+            
+            UITabBar.appearance().standardAppearance = appearance
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
+    
     var body: some View {
         TabView {
-            Text("Расходы")
+            TransactionsListView(direction: .outcome)
                 .tabItem {
                     Image("outcomeImage")
                         .renderingMode(.template)
@@ -18,7 +27,7 @@ struct TabBarView: View {
                         .font(.system(size: 10))
                 }
             
-            Text("Доходы")
+            TransactionsListView(direction: .income)
                 .tabItem {
                     Image("incomeImage")
                         .renderingMode(.template)
