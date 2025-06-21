@@ -47,6 +47,14 @@ struct HistoryView: View {
                                 }
                             })
                         
+                        Picker("Сортировка", selection: $viewModel.sortOption) {
+                            ForEach(TransactionSortOption.allCases) { option in
+                                Text(option.rawValue).tag(option)
+                            }
+                        }
+                        .tint(.black)
+                        .pickerStyle(.menu)
+                        
                         TotalCellView(title: Constants.amountTitle, total: viewModel.totalAmount)
                     }
                     

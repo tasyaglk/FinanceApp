@@ -13,6 +13,11 @@ final class HistoryViewModel: ObservableObject {
     @Published var categories: [Int: Category] = [:]
     @Published var startDate: Date
     @Published var endDate: Date
+    @Published var sortOption: TransactionSortOption = .date {
+        didSet {
+            sortTransactions()
+        }
+    }
     
     private let transactionsService: TransactionsServiceProtocol = TransactionsService()
     private let categoriesService: CategoriesServiceProtocol = CategoriesService()
@@ -52,8 +57,19 @@ final class HistoryViewModel: ObservableObject {
                 }
                 return false
             }
+            
+            sortTransactions()
         } catch {
             print("error with fetching transactions")
+        }
+    }
+    
+    private func sortTransactions() {
+        switch sortOption {
+        case .date:
+            transactions.sort(by: { $0.createdAt < $1.createdAt })
+        case .amount:
+            transactions.sort(by: { $0.amount < $1.amount })
         }
     }
 }

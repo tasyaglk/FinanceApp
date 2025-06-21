@@ -30,6 +30,13 @@ struct TransactionsListView: View {
                     
                     List {
                         Section {
+                            Picker("Сортировка", selection: $viewModel.sortOption) {
+                                ForEach(TransactionSortOption.allCases) { option in
+                                    Text(option.rawValue).tag(option)
+                                }
+                            }
+                            .tint(.black)
+                            .pickerStyle(.menu)
                             TotalCellView(title: Constants.total, total: viewModel.totalAmount)
                         }
                         
@@ -82,7 +89,7 @@ struct TransactionsListView: View {
                         }
                     }
                 }
-                .navigationBarHidden(false) 
+                .navigationBarHidden(false)
                 .navigationDestination(isPresented: $isHistoryTapped) {
                     HistoryView(direction: viewModel.direction)
                 }

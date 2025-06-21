@@ -14,8 +14,8 @@
             filePath = "FinanceApp/ViewModel/TransactionViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "19"
-            endingLineNumber = "19"
+            startingLineNumber = "31"
+            endingLineNumber = "31"
             landmarkName = "totalAmount"
             landmarkType = "24">
          </BreakpointContent>
@@ -30,8 +30,8 @@
             filePath = "FinanceApp/ViewModel/TransactionViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "40"
-            endingLineNumber = "40"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
             landmarkName = "fetchInfo()"
             landmarkType = "7">
          </BreakpointContent>
@@ -46,8 +46,8 @@
             filePath = "FinanceApp/ViewModel/TransactionViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
+            startingLineNumber = "50"
+            endingLineNumber = "50"
             landmarkName = "fetchInfo()"
             landmarkType = "7">
          </BreakpointContent>
@@ -78,8 +78,8 @@
             filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "21"
-            endingLineNumber = "21"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
             landmarkName = "totalAmount"
             landmarkType = "24">
          </BreakpointContent>
@@ -94,8 +94,8 @@
             filePath = "FinanceApp/View/History/HistoryView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "50"
-            endingLineNumber = "50"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -110,8 +110,8 @@
             filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "36"
-            endingLineNumber = "36"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
             landmarkName = "fetchInfo()"
             landmarkType = "7">
          </BreakpointContent>
@@ -174,8 +174,8 @@
             filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "37"
-            endingLineNumber = "37"
+            startingLineNumber = "42"
+            endingLineNumber = "42"
             landmarkName = "fetchInfo()"
             landmarkType = "7">
          </BreakpointContent>
@@ -190,8 +190,8 @@
             filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "38"
-            endingLineNumber = "38"
+            startingLineNumber = "43"
+            endingLineNumber = "43"
             landmarkName = "fetchInfo()"
             landmarkType = "7">
          </BreakpointContent>
@@ -200,86 +200,6 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "DFEE2E51-0A4E-475A-A843-92A36CB8A500"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "45"
-            endingLineNumber = "45"
-            landmarkName = "fetchInfo()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "45B444DA-A594-4FB5-B1D1-175F92DEA50C"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
-            landmarkName = "fetchInfo()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "8E4843F1-DDFE-49DA-A860-345AFAC4C6E2"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "47"
-            endingLineNumber = "47"
-            landmarkName = "fetchInfo()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "5FEE70C8-EBE1-4222-8726-A4DE32191331"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "48"
-            endingLineNumber = "48"
-            landmarkName = "fetchInfo()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "B4C28736-91B0-45D5-A0B5-B68022DD8D29"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
-            landmarkName = "fetchInfo()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "0BA2ECC3-4AD7-4A02-97B3-D797FDADB806"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -295,7 +215,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "58BE2B77-536E-470C-A58A-0C68BEF1720E"
+            uuid = "45B444DA-A594-4FB5-B1D1-175F92DEA50C"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -311,23 +231,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "99087CD5-D997-445B-BF6C-145CE41E2678"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "53"
-            endingLineNumber = "53"
-            landmarkName = "fetchInfo()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "296E4AB0-7B19-48BE-A858-BF5240A2107A"
+            uuid = "8E4843F1-DDFE-49DA-A860-345AFAC4C6E2"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -343,7 +247,23 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "20A2F204-5D33-48F3-87DF-FBAB03A8F622"
+            uuid = "5FEE70C8-EBE1-4222-8726-A4DE32191331"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "fetchInfo()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B4C28736-91B0-45D5-A0B5-B68022DD8D29"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -359,7 +279,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "8683C691-5407-4D2F-94E7-475C5AF90CA7"
+            uuid = "0BA2ECC3-4AD7-4A02-97B3-D797FDADB806"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -375,7 +295,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "570566E0-1196-4775-B4C9-E1D2891E8A3C"
+            uuid = "58BE2B77-536E-470C-A58A-0C68BEF1720E"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -391,23 +311,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "FEC6EB5B-24D2-47D4-891B-487CE63A22AD"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "57"
-            endingLineNumber = "57"
-            landmarkName = "fetchInfo()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "E38E4028-2D10-4E82-BF08-5BCC780C153A"
+            uuid = "99087CD5-D997-445B-BF6C-145CE41E2678"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -423,7 +327,23 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "E7B52C95-9CD3-4203-81C3-51B1BF5A6D0A"
+            uuid = "296E4AB0-7B19-48BE-A858-BF5240A2107A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
+            landmarkName = "fetchInfo()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "20A2F204-5D33-48F3-87DF-FBAB03A8F622"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -432,6 +352,86 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "59"
             endingLineNumber = "59"
+            landmarkName = "fetchInfo()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8683C691-5407-4D2F-94E7-475C5AF90CA7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
+            landmarkName = "fetchInfo()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "570566E0-1196-4775-B4C9-E1D2891E8A3C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "63"
+            endingLineNumber = "63"
+            landmarkName = "fetchInfo()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "FEC6EB5B-24D2-47D4-891B-487CE63A22AD"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "64"
+            endingLineNumber = "64"
+            landmarkName = "fetchInfo()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E38E4028-2D10-4E82-BF08-5BCC780C153A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "65"
+            endingLineNumber = "65"
+            landmarkName = "fetchInfo()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E7B52C95-9CD3-4203-81C3-51B1BF5A6D0A"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "75"
+            endingLineNumber = "75"
             landmarkName = "HistoryViewModel"
             landmarkType = "3">
          </BreakpointContent>
@@ -526,8 +526,8 @@
             filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "28"
-            endingLineNumber = "28"
+            startingLineNumber = "33"
+            endingLineNumber = "33"
             landmarkName = "init(direction:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -542,8 +542,8 @@
             filePath = "FinanceApp/ViewModel/HistoryViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "29"
-            endingLineNumber = "29"
+            startingLineNumber = "34"
+            endingLineNumber = "34"
             landmarkName = "init(direction:)"
             landmarkType = "7">
          </BreakpointContent>

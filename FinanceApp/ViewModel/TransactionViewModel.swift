@@ -7,10 +7,22 @@
 
 import SwiftUI
 
+enum TransactionSortOption: String, CaseIterable, Identifiable {
+    case date = "по дате"
+    case amount = "по сумме транзакций"
+
+    var id: String { rawValue }
+}
+
 @MainActor
 final class TransactionViewModel: ObservableObject {
     @Published var transactions: [Transaction] = []
     @Published var categories: [Int: Category] = [:]
+    @Published var sortOption: TransactionSortOption = .date {
+        didSet {
+            sortTransactions()
+        }
+    }
     
     private let transactionsService: TransactionsServiceProtocol = TransactionsService()
     private let categoriesService: CategoriesServiceProtocol = CategoriesService()
@@ -43,8 +55,19 @@ final class TransactionViewModel: ObservableObject {
                 }
                 return false
             }
+            sortTransactions()
         } catch {
             print("error with fetching transactions")
         }
     }
+    
+    private func sortTransactions() {
+        switch sortOption {
+        case .date:
+            transactions.sort(by: { $0.createdAt < $1.createdAt })
+        case .amount:
+            transactions.sort(by: { $0.amount < $1.amount })
+        }
+    }
+
 }
