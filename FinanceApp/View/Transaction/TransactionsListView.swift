@@ -12,7 +12,7 @@ struct TransactionsListView: View {
     @State private var isHistoryTapped = false
     
     init(direction: Direction) {
-        _viewModel = StateObject(wrappedValue: TransactionViewModel(direction: direction))
+        _viewModel = StateObject(wrappedValue: TransactionViewModel(direction: direction, customDates: false))
     }
     
     var body: some View {

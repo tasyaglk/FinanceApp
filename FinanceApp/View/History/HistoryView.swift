@@ -9,13 +9,13 @@ import SwiftUI
 
 struct HistoryView: View {
     @Environment(\.dismiss) var dismiss
-    @StateObject private var viewModel: HistoryViewModel
+    @StateObject private var viewModel: TransactionViewModel
     
     @State private var localStartDate: Date = Date()
     @State private var localEndDate: Date = Date()
     
     init(direction: Direction) {
-        _viewModel = StateObject(wrappedValue: HistoryViewModel(direction: direction))
+        _viewModel = StateObject(wrappedValue: TransactionViewModel(direction: direction, customDates: true))
     }
     var body: some View {
         ZStack {
