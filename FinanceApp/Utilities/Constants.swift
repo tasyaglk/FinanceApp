@@ -18,4 +18,10 @@ enum Constants {
     static let beginTitle: String = "Начало"
     static let endTitle: String = "Конец"
     static let amountTitle: String = "Сумма"
+    static let sortTitle: String = "Сортировка"
+    static let cornerRadius: CGFloat = 8
+    static let regularFontSize: CGFloat = 13
+    static let titleFontSize: CGFloat = 34
+    static let padding: CGFloat = 16
+    static let imageSize: CGFloat = 56
 }

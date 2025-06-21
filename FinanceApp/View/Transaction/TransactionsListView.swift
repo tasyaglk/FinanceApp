@@ -22,15 +22,15 @@ struct TransactionsListView: View {
                 VStack(spacing: 0) {
                     HStack {
                         Text(viewModel.direction == .income ? Constants.incomeTitle : Constants.outcomeTitle)
-                            .font(.system(size: 34, weight: .bold))
+                            .font(.system(size: CGFloat(Constants.titleFontSize), weight: .bold))
                         
                         Spacer()
                     }
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, Constants.padding)
                     
                     List {
                         Section {
-                            Picker("Сортировка", selection: $viewModel.sortOption) {
+                            Picker(Constants.sortTitle, selection: $viewModel.sortOption) {
                                 ForEach(TransactionSortOption.allCases) { option in
                                     Text(option.rawValue).tag(option)
                                 }
@@ -50,7 +50,7 @@ struct TransactionsListView: View {
                                 }
                             } header: {
                                 Text(Constants.operationTitle)
-                                    .font(.system(size: 13, weight: .regular))
+                                    .font(.system(size: Constants.regularFontSize, weight: .regular))
                                     .foregroundColor(.gray)
                             }
                         }
@@ -68,13 +68,13 @@ struct TransactionsListView: View {
                                 }) {
                                     Image(systemName: "plus.circle.fill")
                                         .resizable()
-                                        .frame(width: 56, height: 56)
+                                        .frame(width: Constants.imageSize, height: Constants.imageSize)
                                         .foregroundColor(.main)
                                         .background(.white)
                                         .clipShape(Circle())
                                 }
-                                .padding(.bottom, 16)
-                                .padding(.trailing, 16)
+                                .padding(.bottom, Constants.padding)
+                                .padding(.trailing, Constants.padding)
                             }
                         }
                     }

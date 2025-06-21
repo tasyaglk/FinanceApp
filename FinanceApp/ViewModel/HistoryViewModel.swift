@@ -40,13 +40,13 @@ final class HistoryViewModel: ObservableObject {
     
     func fetchInfo() async {
         do {
-            if endDate < startDate {
-                endDate = startDate
-            }
-            
-            if startDate > endDate {
-                startDate = endDate
-            }
+//            if endDate < startDate {
+//                endDate = startDate
+//            }
+//            
+//            if startDate > endDate {
+//                startDate = endDate
+//            }
             let allTransactions = try await transactionsService.fetchTransactions(from: startDate, to: endDate)
             let categoriesArray = try await categoriesService.categories(direction: direction)
             self.categories = Dictionary(uniqueKeysWithValues: categoriesArray.map { ($0.id, $0) })

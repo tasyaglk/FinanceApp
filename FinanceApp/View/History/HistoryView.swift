@@ -25,29 +25,53 @@ struct HistoryView: View {
                     
                     HStack {
                         Text(Constants.historyTitle)
-                            .font(.system(size: 34, weight: .bold))
+                            .font(.system(size: Constants.titleFontSize, weight: .bold))
                         
                         Spacer()
                     }
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, Constants.padding)
                 
                 List {
                     Section {
-                        DatePicker(Constants.beginTitle, selection: $viewModel.startDate, displayedComponents: .date)
-                            .onChange(of: viewModel.startDate, {
-                                Task {
-                                    await viewModel.fetchInfo()
-                                }
-                            })
                         
-                        DatePicker(Constants.endTitle, selection: $viewModel.endDate, displayedComponents: .date)
-                            .onChange(of: viewModel.endDate, {
-                                Task { await viewModel.fetchInfo()
-                                }
-                            })
+                        HStack {
+                            Text(Constants.beginTitle)
+                            Spacer()
+                            DatePicker("", selection: $viewModel.startDate, displayedComponents: .date)
+                                .onChange(of: viewModel.startDate, { _, newValue in
+                                    if viewModel.endDate < newValue {
+                                        viewModel.endDate = newValue
+                                    }
+                                    Task {
+                                        await viewModel.fetchInfo()
+                                    }
+                                })
+                                .background(Color.lightMain)
+                                .labelsHidden()
+                                .cornerRadius(Constants.cornerRadius)
+                            
+                        }
                         
-                        Picker("Сортировка", selection: $viewModel.sortOption) {
+                        HStack {
+                            Text(Constants.endTitle)
+                            Spacer()
+                            DatePicker("", selection: $viewModel.endDate, displayedComponents: .date)
+                                .onChange(of: viewModel.endDate, { _, newValue in
+                                    if viewModel.startDate > newValue {
+                                        viewModel.startDate = newValue
+                                    }
+                                    Task {
+                                        await viewModel.fetchInfo()
+                                    }
+                                })
+                                .background(Color.lightMain)
+                                .labelsHidden()
+                                .cornerRadius(Constants.cornerRadius)
+                            
+                        }
+                        
+                        Picker(Constants.sortTitle, selection: $viewModel.sortOption) {
                             ForEach(TransactionSortOption.allCases) { option in
                                 Text(option.rawValue).tag(option)
                             }
@@ -68,7 +92,7 @@ struct HistoryView: View {
                             }
                         } header: {
                             Text(Constants.operationTitle)
-                                .font(.system(size: 13, weight: .regular))
+                                .font(.system(size: Constants.regularFontSize, weight: .regular))
                                 .foregroundColor(.gray)
                         }
                     }
