@@ -37,6 +37,7 @@ struct TransactionsListView: View {
                             }
                             .tint(.black)
                             .pickerStyle(.menu)
+                            
                             TotalCellView(title: Constants.total, total: viewModel.totalAmount)
                         }
                         
