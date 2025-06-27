@@ -24,6 +24,13 @@ enum Constants {
     static let endTitle: String = "Конец"
     static let amountTitle: String = "Сумма"
     static let sortTitle: String = "Сортировка"
+    
+    static let editButtonTitle: String = "Редактировать"
+    static let myBankAccout: String = "Мой счет"
+    static let balance: String = "Баланс"
+    static let currency: String = "Валюта"
+    static let moneyEmoji: String = "💰" 
+    
     static let cornerRadius: CGFloat = 8
     static let regularFontSize: CGFloat = 13
     static let titleFontSize: CGFloat = 34
