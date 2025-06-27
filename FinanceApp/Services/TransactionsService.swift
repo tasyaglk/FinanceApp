@@ -47,7 +47,7 @@ final class TransactionsService: TransactionsServiceProtocol {
                 updatedAt: Date()
             ),
             Transaction(
-                id: 1,
+                id: 3,
                 accountId: 1,
                 categoryId: 1,
                 amount: 500.00,

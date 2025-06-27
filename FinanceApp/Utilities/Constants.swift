@@ -10,6 +10,11 @@ import Foundation
 enum Constants {
     static let incomeTitle: String = "Доходы сегодня"
     static let outcomeTitle: String = "Расходы сегодня"
+    static let incomeTabbar: String = "Доходы"
+    static let outcomeTabbar: String = "Расходы"
+    static let scoreTabbar: String = "Счет"
+    static let articlesTabbar: String = "Статьи"
+    static let settingsTabbar: String = "Настройки"
     static let russianCurrency: String = "₽"
     static let total: String = "Всего"
     static let operationTitle: String = "ОПЕРАЦИИ"

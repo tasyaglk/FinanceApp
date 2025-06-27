@@ -23,7 +23,7 @@ struct TabBarView: View {
                 .tabItem {
                     Image("outcomeImage")
                         .renderingMode(.template)
-                    Text("Расходы")
+                    Text(Constants.outcomeTabbar)
                         .font(.system(size: 10))
                 }
             
@@ -31,7 +31,7 @@ struct TabBarView: View {
                 .tabItem {
                     Image("incomeImage")
                         .renderingMode(.template)
-                    Text("Доходы")
+                    Text(Constants.incomeTabbar)
                         .font(.system(size: 10))
                 }
             
@@ -39,7 +39,7 @@ struct TabBarView: View {
                 .tabItem {
                     Image("scoreImage")
                         .renderingMode(.template)
-                    Text("Счет")
+                    Text(Constants.scoreTabbar)
                         .font(.system(size: 10))
                 }
             
@@ -47,7 +47,7 @@ struct TabBarView: View {
                 .tabItem {
                     Image("articlesImage")
                         .renderingMode(.template)
-                    Text("Статьи")
+                    Text(Constants.articlesTabbar)
                         .font(.system(size: 10))
                 }
             
@@ -55,7 +55,7 @@ struct TabBarView: View {
                 .tabItem {
                     Image("settingsImage")
                         .renderingMode(.template)
-                    Text("Настройки")
+                    Text(Constants.settingsTabbar)
                         .font(.system(size: 10))
                 }
         }

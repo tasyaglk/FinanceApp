@@ -22,7 +22,7 @@ struct TransactionRow: View {
             }
             
             VStack {
-                Text(category?.name ?? "undefinded")
+                Text(category?.name ?? "undefined")
                     .font(.system(size: 17))
                 
                 if let comment = transaction.comment, !comment.isEmpty {
