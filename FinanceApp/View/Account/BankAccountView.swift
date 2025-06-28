@@ -11,6 +11,9 @@ struct BankAccountView: View {
     @StateObject private var viewModel = BankAccountViewModel()
     @State private var showCurrencyPicker = false
     
+    @State private var editingBalanceText: String = ""
+    @FocusState private var isBalanceFieldFocused: Bool
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -40,11 +43,13 @@ struct BankAccountView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        viewModel.isEditing.toggle()
                         if viewModel.isEditing {
-                            print("edit mode activated")
+                            Task {
+                                await viewModel.saveChanges(newBalanceText: editingBalanceText)
+                            }
                         } else {
-                            viewModel.saveChanges()
+                            viewModel.isEditing = true
+                            editingBalanceText = "\(viewModel.bankAccountInfo?.balance ?? 0)"
                         }
                     }) {
                         Text(viewModel.isEditing ? Constants.saveButtonTitle : Constants.editButtonTitle)
@@ -67,8 +72,29 @@ struct BankAccountView: View {
             
             Spacer()
             
-            Text("\(viewModel.bankAccountInfo?.balance ?? 0)")
-                .foregroundColor(viewModel.isEditing ? Color.lightGray : .black)
+            if viewModel.isEditing {
+                TextField(
+                    "",
+                    text: $editingBalanceText,
+                    onCommit: commitBalanceEdit
+                )
+                .keyboardType(.decimalPad)
+                .multilineTextAlignment(.trailing)
+                .focused($isBalanceFieldFocused)
+                .onAppear {
+                    if let newBalance = Decimal(string: editingBalanceText) {
+                        Task {
+                            await viewModel.updateBalanceInfo(newBalance)
+                        }
+                    }
+                    editingBalanceText = "\(viewModel.bankAccountInfo?.balance ?? 0)"
+                    isBalanceFieldFocused = true
+                }
+                .foregroundColor(.lightGray)
+            } else {
+                Text("\(viewModel.bankAccountInfo?.balance ?? 0)")
+                    .foregroundColor(viewModel.isEditing ? Color.lightGray : .black)
+            }
         }
     }
     
@@ -95,7 +121,7 @@ struct BankAccountView: View {
             ForEach(CurrencyTypes.allCases, id: \.self) { currency in
                 Button {
                     Task {
-                        await viewModel.updateBankAccountInfo("\(viewModel.bankAccountInfo?.balance ?? 0)", currency.symbol)
+                        await viewModel.updateCurrencyInfo(currency.symbol)
                     }
                 } label: {
                     Text(currency.name + " " + currency.symbol)
@@ -103,7 +129,16 @@ struct BankAccountView: View {
                 }
             }
         }
-        
+    }
+    
+    private func commitBalanceEdit() {
+        let cleanedText = editingBalanceText.replacingOccurrences(of: ",", with: ".")
+        if let newBalance = Decimal(string: cleanedText) {
+            Task {
+                await viewModel.updateBalanceInfo(newBalance)
+            }
+        }
+        isBalanceFieldFocused = false
     }
 }
 
