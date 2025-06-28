@@ -35,7 +35,11 @@ struct BankAccountView: View {
                     
                     Spacer()
                 }
-                
+            }
+            .alert("некорректный баланс", isPresented: $viewModel.showInvalidBalanceAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("можно использовать только цифры, минус и одну запятую")
             }
             .scrollDismissesKeyboard(.immediately)
             .refreshable {

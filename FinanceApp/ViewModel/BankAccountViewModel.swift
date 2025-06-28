@@ -12,6 +12,7 @@ final class BankAccountViewModel: ObservableObject {
     @Published var bankAccountInfo: BankAccount?
     @Published var isEditing: Bool = false
     
+    @Published var showInvalidBalanceAlert: Bool = false
     
     private let bankAccountService: BankAccountsServiceProtocol = BankAccountsService()
     
@@ -68,10 +69,34 @@ final class BankAccountViewModel: ObservableObject {
     }
     
     func saveChanges(newBalanceText: String) async {
-        isEditing = false
-        let cleanedText = newBalanceText.replacingOccurrences(of: ",", with: ".")
-        if let newBalance = Decimal(string: cleanedText) {
-            await updateBalanceInfo(newBalance)
+        let cleanNewBalanceText = newBalanceText.replacingOccurrences(of: ",", with: ".")
+        if filterValidBalance(cleanNewBalanceText) {
+            if let newBalance = Decimal(string: cleanNewBalanceText) {
+                await updateBalanceInfo(newBalance)
+                isEditing = false
+            } else {
+                showInvalidBalanceAlert = true
+            }
+        } else {
+            showInvalidBalanceAlert = true
         }
+    }
+    
+    func filterValidBalance(_ text: String) -> Bool {
+        let validCharacters = CharacterSet(charactersIn: "0123456789.,-")
+        let filtered = text.components(separatedBy: validCharacters.inverted).joined()
+        var result = filtered.replacingOccurrences(of: ",", with: ".")
+        
+        if result.filter({ $0 == "." }).count > 1 {
+            if let firstDotIndex = result.firstIndex(of: ".") {
+                result = String(result.prefix(upTo: firstDotIndex)) + String(result.suffix(from: result.index(after: firstDotIndex)).filter { $0 != "." })
+            }
+        }
+        
+        if result.filter({ $0 == "-" }).count > 1 || (result.first == "-" && result.dropFirst().contains("-")) {
+            result = result.replacingOccurrences(of: "-", with: "")
+        }
+        
+        return result == text
     }
 }

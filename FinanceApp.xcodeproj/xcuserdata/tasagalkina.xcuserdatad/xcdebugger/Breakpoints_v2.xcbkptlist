@@ -455,80 +455,80 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "01D0B235-121D-4B2F-ADD8-47E3542EE803"
-            shouldBeEnabled = "Yes"
+            uuid = "1BCEB980-F548-45A6-8C9F-52BFEDE3226D"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FinanceApp/View/Account/BankAccountView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "141"
-            endingLineNumber = "141"
-            landmarkName = "commitBalanceEdit()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "509E4BD1-BC57-4C2F-9A7B-2FAEE1C8B906"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FinanceApp/View/Account/BankAccountView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "142"
-            endingLineNumber = "142"
-            landmarkName = "commitBalanceEdit()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "27C9CDC1-096A-48F6-82D4-DEC1D64BE81E"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FinanceApp/View/Account/BankAccountView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "138"
-            endingLineNumber = "138"
-            landmarkName = "commitBalanceEdit()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "29247E0B-42D6-4D2A-B0D0-C8DFCF586BC5"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FinanceApp/View/Account/BankAccountView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "81"
-            endingLineNumber = "81"
-            landmarkName = "balanceView"
+            startingLineNumber = "39"
+            endingLineNumber = "39"
+            landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "9F7C5883-8FFB-4B4B-B586-744FC7B0F714"
-            shouldBeEnabled = "Yes"
+            uuid = "A3D80883-BC8E-402C-A050-AA8886D3B436"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FinanceApp/View/Account/BankAccountView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "82"
-            endingLineNumber = "82"
-            landmarkName = "balanceView"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B1EA2104-685A-4F36-9B20-BAD9CAAE4C2A"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FinanceApp/View/Account/BankAccountView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "CD9549D8-4A2F-4BB8-AFF3-71F3DBEA36F1"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FinanceApp/View/Account/BankAccountView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "42"
+            endingLineNumber = "42"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B69D6D89-7591-4B44-B7D0-17FD5F2D3CAD"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FinanceApp/View/Account/BankAccountView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "43"
+            endingLineNumber = "43"
+            landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
