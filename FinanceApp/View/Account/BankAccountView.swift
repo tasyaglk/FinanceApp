@@ -38,10 +38,10 @@ struct BankAccountView: View {
                     Spacer()
                 }
             }
-            .alert("некорректный баланс", isPresented: $viewModel.showInvalidBalanceAlert) {
-                Button("OK", role: .cancel) { }
+            .alert(Constants.alertTitle, isPresented: $viewModel.showInvalidBalanceAlert) {
+                Button(Constants.alertButton, role: .cancel) { }
             } message: {
-                Text("можно использовать только цифры, минус и одну запятую")
+                Text(Constants.alertMessage)
             }
             .scrollDismissesKeyboard(.immediately)
             .refreshable {
@@ -86,7 +86,7 @@ struct BankAccountView: View {
                 TextField(
                     "",
                     text: $editingBalanceText,
-                    onCommit: commitBalanceEdit
+                    onCommit: {}
                 )
                 .keyboardType(.decimalPad)
                 .multilineTextAlignment(.trailing)
@@ -106,8 +106,8 @@ struct BankAccountView: View {
                     .foregroundColor(viewModel.isEditing ? Color.lightGray : .black)
                     .spoiler(isOn: $isSpoilerOn)
                     .onShake {
-                                isSpoilerOn.toggle()
-                            }
+                        isSpoilerOn.toggle()
+                    }
             }
         }
     }
@@ -118,7 +118,7 @@ struct BankAccountView: View {
             
             Spacer()
             
-            Text(viewModel.bankAccountInfo?.currency ?? "$")
+            Text(viewModel.bankAccountInfo?.currency ?? CurrencyTypes.rub.symbol)
                 .onTapGesture {
                     if viewModel.isEditing {
                         showCurrencyPicker = true
@@ -131,7 +131,7 @@ struct BankAccountView: View {
                     .foregroundColor(Color.lightGray)
             }
         }
-        .confirmationDialog("Валюта", isPresented: $showCurrencyPicker, titleVisibility: .visible) {
+        .confirmationDialog(Constants.currency, isPresented: $showCurrencyPicker, titleVisibility: .visible) {
             ForEach(CurrencyTypes.allCases, id: \.self) { currency in
                 Button {
                     Task {
@@ -144,18 +144,4 @@ struct BankAccountView: View {
             }
         }
     }
-    
-    private func commitBalanceEdit() {
-        let cleanedText = editingBalanceText.replacingOccurrences(of: ",", with: ".")
-        if let newBalance = Decimal(string: cleanedText) {
-            Task {
-                await viewModel.updateBalanceInfo(newBalance)
-            }
-        }
-        isBalanceFieldFocused = false
-    }
 }
-
-//#Preview {
-//    BankAccountView()
-//}

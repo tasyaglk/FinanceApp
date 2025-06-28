@@ -32,6 +32,10 @@ enum Constants {
     static let currency: String = "Валюта"
     static let moneyEmoji: String = "💰"
     
+    static let alertTitle: String = "некорректный баланс"
+    static let alertButton: String = "ок"
+    static let alertMessage: String = "можно использовать только цифры, минус и одну запятую"
+    
     
     
     static let cornerRadius: CGFloat = 8
