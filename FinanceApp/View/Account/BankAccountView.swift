@@ -37,6 +37,10 @@ struct BankAccountView: View {
                 }
                 
             }
+            .scrollDismissesKeyboard(.immediately)
+            .refreshable {
+                await viewModel.loadBankAccountInfo()
+            }
             .task {
                 await viewModel.loadBankAccountInfo()
             }
