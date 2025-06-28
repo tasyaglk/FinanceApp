@@ -14,6 +14,8 @@ struct BankAccountView: View {
     @State private var editingBalanceText: String = ""
     @FocusState private var isBalanceFieldFocused: Bool
     
+    @State private var isSpoilerOn = false
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -102,6 +104,10 @@ struct BankAccountView: View {
             } else {
                 Text("\(viewModel.bankAccountInfo?.balance ?? 0)")
                     .foregroundColor(viewModel.isEditing ? Color.lightGray : .black)
+                    .spoiler(isOn: $isSpoilerOn)
+                    .onShake {
+                                isSpoilerOn.toggle()
+                            }
             }
         }
     }
