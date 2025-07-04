@@ -43,7 +43,7 @@ struct TabBarView: View {
                         .font(.system(size: 10))
                 }
             
-            Text("Статьи")
+            CategoriesView()
                 .tabItem {
                     Image("articlesImage")
                         .renderingMode(.template)

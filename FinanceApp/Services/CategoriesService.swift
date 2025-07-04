@@ -19,6 +19,8 @@ final class CategoriesService: CategoriesServiceProtocol {
         Category(id: 3, name: "продукты", emoji: "🛒", direction: .outcome),
         Category(id: 4, name: "маникюр", emoji: "💅", direction: .outcome),
         Category(id: 5, name: "педикюр", emoji: "💅", direction: .outcome),
+        Category(id: 6, name: "Аренда квартиры", emoji: "🏠", direction: .outcome),
+
     ]
     
     func categories() async throws -> [Category] {
