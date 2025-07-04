@@ -35,7 +35,7 @@ struct TabBarView: View {
                         .font(.system(size: 10))
                 }
             
-            Text("Счет")
+            BankAccountView()
                 .tabItem {
                     Image("scoreImage")
                         .renderingMode(.template)

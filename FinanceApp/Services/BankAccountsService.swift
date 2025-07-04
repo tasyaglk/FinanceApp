@@ -9,7 +9,7 @@ import Foundation
 
 protocol BankAccountsServiceProtocol {
     func getBankAccount() async throws -> BankAccount?
-    func updateBankAccount(_ account: BankAccount) async throws -> BankAccount
+    func updateBankAccount(_ account: BankAccount) async throws /*-> BankAccount*/
 }
 
 final class BankAccountsService: BankAccountsServiceProtocol {
@@ -19,7 +19,7 @@ final class BankAccountsService: BankAccountsServiceProtocol {
             userId: 1,
             name: "карта зп",
             balance: 50000,
-            currency: "RUB",
+            currency: "₽",
             createdAt: Date(),
             updatedAt: Date()
         ),
@@ -28,7 +28,7 @@ final class BankAccountsService: BankAccountsServiceProtocol {
             userId: 1,
             name: "карта для путешествий",
             balance: 100,
-            currency: "USD",
+            currency: "$",
             createdAt: Date(),
             updatedAt: Date()
         )
@@ -38,8 +38,8 @@ final class BankAccountsService: BankAccountsServiceProtocol {
         return mockAccounts.first
     }
     
-    func updateBankAccount(_ account: BankAccount) async throws -> BankAccount {
+    func updateBankAccount(_ account: BankAccount) async throws /*-> BankAccount */{
         mockAccounts[0] = account
-        return account
+//        return account
     }
 }
