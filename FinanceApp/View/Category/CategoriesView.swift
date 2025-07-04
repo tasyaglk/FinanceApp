@@ -9,15 +9,6 @@ import SwiftUI
 
 struct CategoriesView: View {
     @StateObject private var viewModel: CategoriesViewModel
-    @State private var searchText = ""
-    
-    var filteredItems: [Category] {
-        if searchText.isEmpty {
-            return viewModel.categories
-        } else {
-            return viewModel.categories.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
-        }
-    }
     
     init() {
         _viewModel = StateObject(wrappedValue: CategoriesViewModel())
@@ -28,24 +19,24 @@ struct CategoriesView: View {
             ZStack {
                 Color.background.ignoresSafeArea()
                 
-                if !filteredItems.isEmpty {
+                if !viewModel.filteredCategories.isEmpty {
                     List {
                         Section {
-                            ForEach(filteredItems) { category in
+                            ForEach(viewModel.filteredCategories) { category in
                                 CategoryRow(
                                     category: category
                                 )
                             }
                         } header: {
-                            Text("Статьи")
+                            Text(Constants.categories)
                                 .font(.system(size: Constants.regularFontSize, weight: .regular))
                                 .foregroundColor(.gray)
                         }
                     }
                 }
             }
-            .searchable(text: $searchText)
-            .navigationTitle("Мои статьи")
+            .searchable(text: $viewModel.searchText)
+            .navigationTitle(Constants.categoryTitle)
         }
     }
 }
