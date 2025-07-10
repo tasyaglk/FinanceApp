@@ -35,6 +35,9 @@ struct CategoriesView: View {
                     }
                 }
             }
+            .task {
+                await viewModel.fetchAllCategories()
+            }
             .searchable(text: $viewModel.searchText)
             .navigationTitle(Constants.categoryTitle)
         }

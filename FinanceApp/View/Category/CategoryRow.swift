@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct CategoryRow: View {
-    let category: Category?
+    let category: Category
     
     var body: some View {
         HStack {
-            Text("\(category?.emoji ?? "?")")
+            Text("\(category.emoji)")
                 .font(.system(size: 12))
                 .frame(width: 22, height: 22)
                 .background(.lightMain)
                 .clipShape(Circle())
             
             VStack {
-                Text(category?.name ?? "undefined")
+                Text(category.name)
                     .font(.system(size: 17))
             }
             

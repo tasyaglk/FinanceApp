@@ -5,7 +5,7 @@
 //  Created by Тася Галкина on 04.07.2025.
 //
 
-import SwiftUI
+import Foundation
 
 @MainActor
 final class CategoriesViewModel: ObservableObject {
@@ -19,13 +19,6 @@ final class CategoriesViewModel: ObservableObject {
     }
     
     @Published var filteredCategories: [Category] = []
-    
-    init() {
-        Task {
-            await fetchAllCategories()
-            updateFilteredCategories()
-        }
-    }
     
     private func updateFilteredCategories() {
         if searchText.isEmpty {
@@ -43,6 +36,7 @@ final class CategoriesViewModel: ObservableObject {
     func fetchAllCategories() async {
         do {
             self.categories = try await categoriesService.categories()
+            updateFilteredCategories()
         } catch {
             print("error with fetching categories")
         }
