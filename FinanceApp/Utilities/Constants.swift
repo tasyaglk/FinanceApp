@@ -36,8 +36,9 @@ enum Constants {
     static let alertButton: String = "ок"
     static let alertMessage: String = "можно использовать только цифры, минус и одну запятую"
     
-    
-    
+    static let categoryTitle: String = "Мои статьи"
+    static let categories: String = "Статьи"
+
     static let cornerRadius: CGFloat = 8
     static let regularFontSize: CGFloat = 13
     static let titleFontSize: CGFloat = 34

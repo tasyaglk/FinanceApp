@@ -20,6 +20,7 @@ struct TotalCellView: View {
             
             Text("\(total) \(Constants.russianCurrency)")
                 .font(.system(size: 17))
+            
         }
     }
 }
