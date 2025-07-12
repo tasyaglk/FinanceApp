@@ -18,48 +18,51 @@ protocol TransactionsServiceProtocol {
     func createTransaction(_ transaction: Transaction) async throws
     func updateTransaction(_ transaction: Transaction) async throws
     func deleteTransaction(withId id: Int) async throws
+    
+    func getId() -> Int
 }
 
 final class TransactionsService: TransactionsServiceProtocol {
+
+    static let shared = TransactionsService()
+
+        private init() {}
     
-    private var transactions: [Transaction]
-    
-    init() {
-        transactions = [
-            Transaction(
-                id: 1,
-                accountId: 1,
-                categoryId: 5,
-                amount: 500.00,
-                transactionDate: Date(),
-                comment: "красота",
-                createdAt: Date(),
-                updatedAt: Date()
-            ),
-            Transaction(
-                id: 2,
-                accountId: 1,
-                categoryId: 3,
-                amount: 200.50,
-                transactionDate: Date(),
-                comment: nil,
-                createdAt: Date(),
-                updatedAt: Date()
-            ),
-            Transaction(
-                id: 3,
-                accountId: 1,
-                categoryId: 1,
-                amount: 500.00,
-                transactionDate: Date(),
-                comment: "зп",
-                createdAt: Date(),
-                updatedAt: Date()
-            ),
-        ]
-    }
+    private var transactions = [
+        Transaction(
+            id: 1,
+            accountId: 1,
+            categoryId: 5,
+            amount: 500.00,
+            transactionDate: Date(),
+            comment: "красота",
+            createdAt: Date(),
+            updatedAt: Date()
+        ),
+        Transaction(
+            id: 2,
+            accountId: 1,
+            categoryId: 3,
+            amount: 200.50,
+            transactionDate: Date(),
+            comment: nil,
+            createdAt: Date(),
+            updatedAt: Date()
+        ),
+        Transaction(
+            id: 3,
+            accountId: 1,
+            categoryId: 1,
+            amount: 500.00,
+            transactionDate: Date(),
+            comment: "зп",
+            createdAt: Date(),
+            updatedAt: Date()
+        ),
+    ]
     
     func fetchTransactions(from startDate: Date, to endDate: Date) async throws -> [Transaction] {
+        
         return transactions.filter { transaction in
             return transaction.transactionDate >= startDate && transaction.transactionDate <= endDate
         }
@@ -112,5 +115,9 @@ final class TransactionsService: TransactionsServiceProtocol {
         }
         
         transactions.remove(at: index)
+    }
+    
+    func getId() -> Int {
+        return transactions.count + 1
     }
 }

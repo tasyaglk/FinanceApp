@@ -134,7 +134,7 @@ class AnalysisViewController: UIViewController {
     
     @objc private func sortValueChanged(_ sender: UISegmentedControl) {
         let selectedSortOption = SortOption.allCases[sender.selectedSegmentIndex]
-        viewModel.sortOption = selectedSortOption // Setter в ViewModel обработает остальное
+        viewModel.sortOption = selectedSortOption 
     }
 }
 

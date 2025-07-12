@@ -22,12 +22,15 @@ final class TransactionViewModel: ObservableObject {
     let direction: Direction
     let customDates: Bool
     
-    private let transactionsService: TransactionsServiceProtocol = TransactionsService()
+    private let transactionsService: TransactionsServiceProtocol = TransactionsService.shared
+    
     private let categoriesService: CategoriesServiceProtocol = CategoriesService()
     
-    var totalAmount: Decimal {
-        transactions.map { $0.amount }.reduce(0, +)
-    }
+    //    var totalAmount: Decimal {
+    //        transactions.map { $0.amount }.reduce(0, +)
+    //    }
+    
+    @Published var totalAmount: Decimal = 0
     
     init(direction: Direction, customDates: Bool = false) {
         self.direction = direction
@@ -58,12 +61,15 @@ final class TransactionViewModel: ObservableObject {
             let categoriesArray = try await categoriesService.categories(direction: direction)
             self.categories = Dictionary(uniqueKeysWithValues: categoriesArray.map { ($0.id, $0) })
             
+            
             self.transactions = allTransactions.filter { transaction in
                 if let category = self.categories[transaction.categoryId] {
                     return category.direction == direction
                 }
                 return false
             }
+            self.totalAmount = self.transactions.map { $0.amount }.reduce(0, +)
+            
             
             sortTransactions()
         } catch {

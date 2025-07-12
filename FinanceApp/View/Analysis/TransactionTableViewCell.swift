@@ -107,7 +107,7 @@ final class TransactionTableViewCell: UITableViewCell {
         
         mainStack.addArrangedSubview(emojiLabel)
         mainStack.addArrangedSubview(titleStack)
-        mainStack.addArrangedSubview(UIView()) // spacer
+        mainStack.addArrangedSubview(UIView()) 
         mainStack.addArrangedSubview(amountStack)
         mainStack.addArrangedSubview(chevronImageView)
         

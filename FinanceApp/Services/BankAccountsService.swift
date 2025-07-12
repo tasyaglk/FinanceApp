@@ -9,10 +9,14 @@ import Foundation
 
 protocol BankAccountsServiceProtocol {
     func getBankAccount() async throws -> BankAccount?
-    func updateBankAccount(_ account: BankAccount) async throws /*-> BankAccount*/
+    func updateBankAccount(_ account: BankAccount) async throws
 }
 
 final class BankAccountsService: BankAccountsServiceProtocol {
+    static let shared = BankAccountsService()
+        
+        private init() {}
+    
     private var mockAccounts: [BankAccount] = [
         BankAccount(
             id: 1,

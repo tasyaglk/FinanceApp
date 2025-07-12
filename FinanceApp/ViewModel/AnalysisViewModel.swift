@@ -24,7 +24,8 @@ final class AnalysisViewModel: ObservableObject {
     let customDates: Bool
     var onDataUpdate: (() -> Void)?
     
-    private let transactionsService: TransactionsServiceProtocol = TransactionsService()
+    private let transactionsService: TransactionsServiceProtocol = TransactionsService.shared
+    
     private let categoriesService: CategoriesServiceProtocol = CategoriesService()
     
     var totalAmount: Decimal {
