@@ -13,6 +13,7 @@ struct EditAndAddView: View {
     @FocusState private var isAmountFieldFocused: Bool
     @State private var showCategoryPicker = false
     
+    
     init(direction: Direction, transaction: Transaction? = nil) {
         _viewModel = StateObject(wrappedValue: EditAndAddViewModel(direction: direction, transaction: transaction))
     }
@@ -52,7 +53,7 @@ struct EditAndAddView: View {
                         Section {
                             Button(role: .destructive) {
                                 Task {
-                                    await viewModel.deleteExpense()
+                                    await viewModel.deleteTransaction()
                                     dismiss()
                                 }
                             } label: {
@@ -70,12 +71,17 @@ struct EditAndAddView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Сохранить") {
                         Task {
-                            await viewModel.saveExpense()
-                            dismiss()
+                            if viewModel.validateInputs() {
+                                await viewModel.saveTransaction()
+                                dismiss()
+                            }
                         }
                     }
                     .tint(.button)
                 }
+            }
+            .alert("необходимо заполнить все  поля👀", isPresented: $viewModel.showValidationAlert) {
+                Button("ок", role: .cancel) { }
             }
             .navigationTitle(viewModel.direction == .income ? "Мои доходы" : "Мои расходы")
         }

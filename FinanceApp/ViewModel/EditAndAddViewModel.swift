@@ -24,6 +24,8 @@ final class EditAndAddViewModel: ObservableObject {
     @Published var bankAccountInfo: BankAccount?
     @Published var selectedTransaction: Transaction?
     
+    @Published var showValidationAlert = false
+    
     private var decimalSeparator: String {
         Locale.current.decimalSeparator ?? "."
     }
@@ -73,7 +75,7 @@ final class EditAndAddViewModel: ObservableObject {
         }
     }
     
-    func saveExpense() async {
+    func saveTransaction() async {
         guard let category = seletedCategory,
               let account = bankAccountInfo,
               let amountDecimal = decimalAmount()
@@ -122,9 +124,29 @@ final class EditAndAddViewModel: ObservableObject {
         }
     }
     
-    func deleteExpense() async {
-        guard let transaction = selectedTransaction else { return }
+    func deleteTransaction() async {
+        guard let transaction = selectedTransaction,
+              let account = bankAccountInfo else { return }
         do {
+            let transactionAmount = transaction.amount
+            var newBalance = account.balance
+            
+            if direction == .outcome {
+                newBalance += transactionAmount
+            } else {
+                newBalance -= transactionAmount
+            }
+            
+            let updatedAccount = BankAccount(
+                id: account.id,
+                userId: account.userId,
+                name: account.name,
+                balance: newBalance,
+                currency: account.currency,
+                createdAt: account.createdAt,
+                updatedAt: Date()
+            )
+            try await bankAccountService.updateBankAccount(updatedAccount)
             try await transactionsService.deleteTransaction(withId: transaction.id)
         } catch {
             print("Error deleting transaction")
@@ -141,16 +163,6 @@ final class EditAndAddViewModel: ObservableObject {
         return calendar.date(from: dateComponents) ?? date
     }
     
-    func decimalAmount() -> Decimal? {
-        let formatter = NumberFormatter()
-        formatter.locale = Locale.current
-        formatter.numberStyle = .decimal
-        if let number = formatter.number(from: amount) {
-            return number.decimalValue
-        }
-        return nil
-    }
-    
     func filterAmountInput(_ input: String) -> String {
         var result = ""
         var hasSeparator = false
@@ -164,5 +176,25 @@ final class EditAndAddViewModel: ObservableObject {
             }
         }
         return result
+    }
+    
+    func decimalAmount() -> Decimal? {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale.current
+        formatter.numberStyle = .decimal
+        if let number = formatter.number(from: amount) {
+            return number.decimalValue
+        }
+        return nil
+    }
+    
+    func validateInputs() -> Bool {
+        guard seletedCategory != nil,
+              decimalAmount() != nil,
+              !amount.isEmpty else {
+            showValidationAlert = true
+            return false
+        }
+        return true
     }
 }
