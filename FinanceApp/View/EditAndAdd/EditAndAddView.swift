@@ -28,7 +28,7 @@ struct EditAndAddView: View {
                         amountSection
                         
                         HStack {
-                            Text("Дата")
+                            Text(Constants.date)
                             Spacer()
                             DatePicker("", selection: $viewModel.date, in: ...Date(), displayedComponents: .date)
                                 .background(Color.lightMain)
@@ -39,14 +39,14 @@ struct EditAndAddView: View {
                                 .cornerRadius(Constants.cornerRadius)
                         }
                         HStack {
-                            Text("Время")
+                            Text(Constants.time)
                             Spacer()
                             DatePicker("", selection: $viewModel.time, displayedComponents: .hourAndMinute)
                                 .background(Color.lightMain)
                                 .labelsHidden()
                                 .cornerRadius(Constants.cornerRadius)
                         }
-                        TextField("комментарий", text: $viewModel.description)
+                        TextField(Constants.comments, text: $viewModel.description)
                     }
                     
                     if viewModel.isEditing {
@@ -57,7 +57,7 @@ struct EditAndAddView: View {
                                     dismiss()
                                 }
                             } label: {
-                                Text(viewModel.direction == .income ? "Удалить доход" : "Удалить расход")
+                                Text(viewModel.direction == .income ? Constants.deleteIncome : Constants.deleteOutcome)
                             }
                         }
                     }
@@ -65,11 +65,11 @@ struct EditAndAddView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Отменить") { dismiss() }
+                    Button(Constants.cancel) { dismiss() }
                         .tint(.button)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Сохранить") {
+                    Button(Constants.saveButtonTitle) {
                         Task {
                             if viewModel.validateInputs() {
                                 await viewModel.saveTransaction()
@@ -80,24 +80,24 @@ struct EditAndAddView: View {
                     .tint(.button)
                 }
             }
-            .alert("необходимо заполнить все  поля👀", isPresented: $viewModel.showValidationAlert) {
-                Button("ок", role: .cancel) { }
+            .alert(Constants.saveAlert, isPresented: $viewModel.showValidationAlert) {
+                Button(Constants.alertButton, role: .cancel) { }
             }
-            .navigationTitle(viewModel.direction == .income ? "Мои доходы" : "Мои расходы")
+            .navigationTitle(viewModel.direction == .income ? Constants.income : Constants.outcome)
         }
         .navigationBarBackButtonHidden(true)
     }
     
     private var categorySection: some View {
         HStack {
-            Text("Статья")
+            Text(Constants.category)
             Spacer()
-            Text(viewModel.seletedCategory?.name ?? "Не выбрано")
+            Text(viewModel.seletedCategory?.name ?? Constants.notSelected)
                 .onTapGesture { showCategoryPicker = true }
             Image(systemName: "chevron.right")
                 .foregroundColor(.lightGray)
         }
-        .confirmationDialog("Category", isPresented: $showCategoryPicker) {
+        .confirmationDialog(Constants.category, isPresented: $showCategoryPicker) {
             ForEach(viewModel.categories) { category in
                 Button {
                     viewModel.seletedCategory = category
@@ -111,9 +111,9 @@ struct EditAndAddView: View {
     
     private var amountSection: some View {
         HStack {
-            Text("Сумма")
+            Text(Constants.amount)
             Spacer()
-            TextField("0", text: $viewModel.amount)
+            TextField(Constants.amountDigitZero, text: $viewModel.amount)
                 .keyboardType(.decimalPad)
                 .multilineTextAlignment(.trailing)
                 .focused($isAmountFieldFocused)
