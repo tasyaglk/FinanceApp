@@ -16,6 +16,8 @@ struct HistoryView: View {
     
     @State private var isAnalysisTapped = false
     
+    @State private var selectedTransaction: Transaction? = nil
+    
     init(direction: Direction) {
         _viewModel = StateObject(wrappedValue: TransactionViewModel(direction: direction, customDates: true))
     }
@@ -91,6 +93,9 @@ struct HistoryView: View {
                                     category: viewModel.categories[transaction.categoryId],
                                     transaction: transaction
                                 )
+                                .onTapGesture {
+                                    selectedTransaction = transaction
+                                }
                             }
                         } header: {
                             Text(Constants.operationTitle)
@@ -101,6 +106,16 @@ struct HistoryView: View {
                 }
                 Spacer()
             }
+        }
+        .onAppear {
+            Task {
+                await viewModel.fetchInfo()
+            }
+        }
+        .fullScreenCover(item: $selectedTransaction, onDismiss: {
+            Task { await viewModel.fetchInfo() }
+        }) { transaction in
+            EditAndAddView(direction: viewModel.direction, transaction: transaction)
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {

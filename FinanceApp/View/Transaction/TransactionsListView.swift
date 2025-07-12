@@ -87,6 +87,11 @@ struct TransactionsListView: View {
                         }
                     }
                 )
+                .onAppear {
+                    Task {
+                        await viewModel.fetchInfo()
+                    }
+                }
                 .fullScreenCover(item: $selectedTransaction, onDismiss: {
                     Task { await viewModel.fetchInfo() }
                 }) { transaction in

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class AnalysisViewController: UIViewController {
     private let viewModel: AnalysisViewModel
@@ -28,6 +29,16 @@ class AnalysisViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        Task {
+            await viewModel.fetchInfo()
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
     }
     
     override func viewDidLoad() {
@@ -134,7 +145,7 @@ class AnalysisViewController: UIViewController {
     
     @objc private func sortValueChanged(_ sender: UISegmentedControl) {
         let selectedSortOption = SortOption.allCases[sender.selectedSegmentIndex]
-        viewModel.sortOption = selectedSortOption 
+        viewModel.sortOption = selectedSortOption
     }
 }
 
@@ -210,5 +221,15 @@ extension AnalysisViewController: UITableViewDelegate, UITableViewDataSource {
             return Constants.operationTitle
         }
         return nil
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard indexPath.section == 1 else { return }
+        
+        let transaction = viewModel.transactions[indexPath.row]
+        let editView = EditAndAddView(direction: viewModel.direction, transaction: transaction)
+        
+        let hostingController = UIHostingController(rootView: editView)
+        navigationController?.pushViewController(hostingController, animated: true)
     }
 }
