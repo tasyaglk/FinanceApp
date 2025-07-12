@@ -60,5 +60,7 @@ struct TabBarView: View {
                 }
         }
         .tint(.main)
+        .background(Color.background)
+        .ignoresSafeArea(edges: .all)
     }
 }

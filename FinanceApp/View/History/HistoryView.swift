@@ -131,6 +131,8 @@ struct HistoryView: View {
                 startDate: viewModel.startDate,
                 endDate: viewModel.endDate
             )
+            .background(Color.background)
+            .ignoresSafeArea(edges: .all)
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarHidden(true)
         }
