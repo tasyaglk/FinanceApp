@@ -46,7 +46,12 @@ final class EditAndAddViewModel: ObservableObject {
     }
     
     private func prefillFields(with transaction: Transaction) {
-        self.amount = transaction.amount.description
+        let formatter = NumberFormatter()
+        formatter.locale = Locale.current
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 2
+        self.amount = formatter.string(from: transaction.amount as NSNumber) ?? transaction.amount.description
+        
         self.date = transaction.transactionDate
         self.time = transaction.transactionDate
         self.description = transaction.comment ?? ""
