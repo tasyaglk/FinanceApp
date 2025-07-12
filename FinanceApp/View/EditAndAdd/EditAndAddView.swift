@@ -69,7 +69,7 @@ struct EditAndAddView: View {
                         .tint(.button)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(Constants.saveButtonTitle) {
+                    Button(viewModel.isEditing ? Constants.saveButtonTitle : Constants.createButtonTitle) {
                         Task {
                             if viewModel.validateInputs() {
                                 await viewModel.saveTransaction()

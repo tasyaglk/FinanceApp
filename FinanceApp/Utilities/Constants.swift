@@ -40,6 +40,7 @@ enum Constants {
     static let categories: String = "Статьи"
     
     static let analysisTitle: String = "Анализ"
+    static let createButtonTitle: String = "Создать"
     
     static let date: String = "Дата"
     static let time: String = "Время"
