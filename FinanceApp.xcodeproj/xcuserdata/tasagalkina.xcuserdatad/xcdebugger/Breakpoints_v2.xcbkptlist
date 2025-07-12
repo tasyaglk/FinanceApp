@@ -562,6 +562,36 @@
             endingLineNumber = "71"
             landmarkName = "createTransaction(_:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "BBFCFBAC-4A9E-4291-85A9-96F57776563B - 764f4b03b85a8350"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "FinanceApp.TransactionsService.createTransaction(FinanceApp.Transaction) async throws -&gt; ()"
+                  moduleName = "FinanceApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tasagalkina/Desktop/%D0%A8%D0%9C%D0%A0/FinanceApp/FinanceApp/Services/TransactionsService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "71"
+                  endingLineNumber = "71">
+               </Location>
+               <Location
+                  uuid = "BBFCFBAC-4A9E-4291-85A9-96F57776563B - c0bc7eff5dd8f6c9"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for FinanceApp.TransactionsService.createTransaction(FinanceApp.Transaction) async throws -&gt; ()"
+                  moduleName = "FinanceApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tasagalkina/Desktop/%D0%A8%D0%9C%D0%A0/FinanceApp/FinanceApp/Services/TransactionsService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "71"
+                  endingLineNumber = "71">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -578,6 +608,36 @@
             endingLineNumber = "73"
             landmarkName = "createTransaction(_:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "40FF5952-62C5-45A3-A032-8845CA2E38E8 - c0bc7eff5dd8f68b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for FinanceApp.TransactionsService.createTransaction(FinanceApp.Transaction) async throws -&gt; ()"
+                  moduleName = "FinanceApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tasagalkina/Desktop/%D0%A8%D0%9C%D0%A0/FinanceApp/FinanceApp/Services/TransactionsService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "73"
+                  endingLineNumber = "73">
+               </Location>
+               <Location
+                  uuid = "40FF5952-62C5-45A3-A032-8845CA2E38E8 - a764a9e73a0b1e75"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (FinanceApp.Transaction) -&gt; Swift.Bool in FinanceApp.TransactionsService.createTransaction(FinanceApp.Transaction) async throws -&gt; ()"
+                  moduleName = "FinanceApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tasagalkina/Desktop/%D0%A8%D0%9C%D0%A0/FinanceApp/FinanceApp/Services/TransactionsService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "73"
+                  endingLineNumber = "73">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -642,6 +702,36 @@
             endingLineNumber = "74"
             landmarkName = "createTransaction(_:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "330929E0-7DD6-46B1-9C2F-6C3B122497A8 - c0bc7eff5dd8f6ac"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for FinanceApp.TransactionsService.createTransaction(FinanceApp.Transaction) async throws -&gt; ()"
+                  moduleName = "FinanceApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tasagalkina/Desktop/%D0%A8%D0%9C%D0%A0/FinanceApp/FinanceApp/Services/TransactionsService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "74"
+                  endingLineNumber = "74">
+               </Location>
+               <Location
+                  uuid = "330929E0-7DD6-46B1-9C2F-6C3B122497A8 - c0bc7eff5dd8f6ac"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for FinanceApp.TransactionsService.createTransaction(FinanceApp.Transaction) async throws -&gt; ()"
+                  moduleName = "FinanceApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tasagalkina/Desktop/%D0%A8%D0%9C%D0%A0/FinanceApp/FinanceApp/Services/TransactionsService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "74"
+                  endingLineNumber = "74">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -680,7 +770,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "B890FCE2-CBCA-4F71-8A2C-09AC71AF8F34"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FinanceApp/ViewModel/TransactionViewModel.swift"
@@ -690,6 +780,36 @@
             endingLineNumber = "65"
             landmarkName = "fetchInfo()"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "B890FCE2-CBCA-4F71-8A2C-09AC71AF8F34 - 3ec8a0ba6a8714b2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for FinanceApp.TransactionViewModel.fetchInfo() async -&gt; ()"
+                  moduleName = "FinanceApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tasagalkina/Desktop/%D0%A8%D0%9C%D0%A0/FinanceApp/FinanceApp/ViewModel/TransactionViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "65"
+                  endingLineNumber = "65">
+               </Location>
+               <Location
+                  uuid = "B890FCE2-CBCA-4F71-8A2C-09AC71AF8F34 - 8daa94be4e98245"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 (FinanceApp.Transaction) -&gt; Swift.Bool in FinanceApp.TransactionViewModel.fetchInfo() async -&gt; ()"
+                  moduleName = "FinanceApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tasagalkina/Desktop/%D0%A8%D0%9C%D0%A0/FinanceApp/FinanceApp/ViewModel/TransactionViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "65"
+                  endingLineNumber = "65">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -744,7 +864,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "BB5DB4C2-B2A3-4EC4-A9CD-EC8B40DD7063"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FinanceApp/ViewModel/TransactionViewModel.swift"
@@ -753,6 +873,68 @@
             startingLineNumber = "71"
             endingLineNumber = "71"
             landmarkName = "fetchInfo()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "BB5DB4C2-B2A3-4EC4-A9CD-EC8B40DD7063 - 3ec8a0ba6a8715f8"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for FinanceApp.TransactionViewModel.fetchInfo() async -&gt; ()"
+                  moduleName = "FinanceApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tasagalkina/Desktop/%D0%A8%D0%9C%D0%A0/FinanceApp/FinanceApp/ViewModel/TransactionViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "71"
+                  endingLineNumber = "71">
+               </Location>
+               <Location
+                  uuid = "BB5DB4C2-B2A3-4EC4-A9CD-EC8B40DD7063 - 4fcddbb8036aaa47"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #3 (FinanceApp.Transaction) -&gt; __C.NSDecimal in FinanceApp.TransactionViewModel.fetchInfo() async -&gt; ()"
+                  moduleName = "FinanceApp.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tasagalkina/Desktop/%D0%A8%D0%9C%D0%A0/FinanceApp/FinanceApp/ViewModel/TransactionViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "71"
+                  endingLineNumber = "71">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C272ECE7-628B-45EC-A31B-BF5B4BCF5F8B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FinanceApp/ViewModel/EditAndAddViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "95"
+            endingLineNumber = "95"
+            landmarkName = "saveExpense()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A58AB3CA-0B16-40F8-9DC0-D5C476A6A842"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FinanceApp/ViewModel/EditAndAddViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
+            landmarkName = "saveExpense()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -16,7 +16,7 @@ struct EditAndAddView: View {
     init(direction: Direction, transaction: Transaction? = nil) {
         _viewModel = StateObject(wrappedValue: EditAndAddViewModel(direction: direction, transaction: transaction))
     }
-
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -29,7 +29,10 @@ struct EditAndAddView: View {
                         HStack {
                             Text("Дата")
                             Spacer()
-                            DatePicker("", selection: $viewModel.date, displayedComponents: .date)
+                            DatePicker("", selection: $viewModel.date, in: ...Date(), displayedComponents: .date)
+                                .background(Color.lightMain)
+                                .labelsHidden()
+                                .cornerRadius(Constants.cornerRadius)
                                 .background(Color.lightMain)
                                 .labelsHidden()
                                 .cornerRadius(Constants.cornerRadius)
@@ -49,9 +52,9 @@ struct EditAndAddView: View {
                         Section {
                             Button(role: .destructive) {
                                 Task {
-                                        await viewModel.deleteExpense()
-                                        dismiss()
-                                    }
+                                    await viewModel.deleteExpense()
+                                    dismiss()
+                                }
                             } label: {
                                 Text(viewModel.direction == .income ? "Удалить доход" : "Удалить расход")
                             }
@@ -109,6 +112,9 @@ struct EditAndAddView: View {
                 .multilineTextAlignment(.trailing)
                 .focused($isAmountFieldFocused)
                 .foregroundColor(.lightGray)
+                .onChange(of: viewModel.amount) { newValue in
+                    viewModel.amount = viewModel.filterAmountInput(newValue)
+                }
         }
     }
 }

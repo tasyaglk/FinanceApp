@@ -24,6 +24,10 @@ final class EditAndAddViewModel: ObservableObject {
     @Published var bankAccountInfo: BankAccount?
     @Published var selectedTransaction: Transaction?
     
+    private var decimalSeparator: String {
+        Locale.current.decimalSeparator ?? "."
+    }
+    
     var isEditing: Bool { selectedTransaction != nil }
     
     init(direction: Direction, transaction: Transaction? = nil) {
@@ -72,7 +76,7 @@ final class EditAndAddViewModel: ObservableObject {
     func saveExpense() async {
         guard let category = seletedCategory,
               let account = bankAccountInfo,
-              let amountDecimal = Decimal(string: amount)
+              let amountDecimal = decimalAmount()
         else { return }
         
         let transactionDateTime = combine(date: date, time: time)
@@ -135,5 +139,30 @@ final class EditAndAddViewModel: ObservableObject {
         dateComponents.minute = timeComponents.minute
         dateComponents.second = timeComponents.second
         return calendar.date(from: dateComponents) ?? date
+    }
+    
+    func decimalAmount() -> Decimal? {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale.current
+        formatter.numberStyle = .decimal
+        if let number = formatter.number(from: amount) {
+            return number.decimalValue
+        }
+        return nil
+    }
+    
+    func filterAmountInput(_ input: String) -> String {
+        var result = ""
+        var hasSeparator = false
+        
+        for char in input {
+            if char.isWholeNumber {
+                result.append(char)
+            } else if String(char) == decimalSeparator && !hasSeparator {
+                result.append(char)
+                hasSeparator = true
+            }
+        }
+        return result
     }
 }
