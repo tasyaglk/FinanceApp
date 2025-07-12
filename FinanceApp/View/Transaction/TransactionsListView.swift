@@ -31,7 +31,7 @@ struct TransactionsListView: View {
                     List {
                         Section {
                             Picker(Constants.sortTitle, selection: $viewModel.sortOption) {
-                                ForEach(TransactionSortOption.allCases) { option in
+                                ForEach(SortOption.allCases) { option in
                                     Text(option.rawValue).tag(option)
                                 }
                             }

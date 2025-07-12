@@ -14,6 +14,8 @@ struct HistoryView: View {
     @State private var localStartDate: Date = Date()
     @State private var localEndDate: Date = Date()
     
+    @State private var isAnalysisTapped = false
+    
     init(direction: Direction) {
         _viewModel = StateObject(wrappedValue: TransactionViewModel(direction: direction, customDates: true))
     }
@@ -72,7 +74,7 @@ struct HistoryView: View {
                         }
                         
                         Picker(Constants.sortTitle, selection: $viewModel.sortOption) {
-                            ForEach(TransactionSortOption.allCases) { option in
+                            ForEach(SortOption.allCases) { option in
                                 Text(option.rawValue).tag(option)
                             }
                         }
@@ -115,7 +117,7 @@ struct HistoryView: View {
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
-                    print("doc")
+                    isAnalysisTapped.toggle()
                 }) {
                     Image(systemName: "doc")
                         .tint(.button)
@@ -123,5 +125,14 @@ struct HistoryView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .navigationDestination(isPresented: $isAnalysisTapped) {
+            AnalysisViewControllerRepresentable(
+                direction: viewModel.direction,
+                startDate: viewModel.startDate,
+                endDate: viewModel.endDate
+            )
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarHidden(true)
+        }
     }
 }

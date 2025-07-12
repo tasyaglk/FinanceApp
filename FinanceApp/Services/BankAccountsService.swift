@@ -38,8 +38,7 @@ final class BankAccountsService: BankAccountsServiceProtocol {
         return mockAccounts.first
     }
     
-    func updateBankAccount(_ account: BankAccount) async throws /*-> BankAccount */{
+    func updateBankAccount(_ account: BankAccount) async throws {
         mockAccounts[0] = account
-//        return account
     }
 }

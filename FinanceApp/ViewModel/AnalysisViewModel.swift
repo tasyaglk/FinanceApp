@@ -1,26 +1,28 @@
 //
-//  TransactionViewModel.swift
+//  AnalysisViewModel.swift
 //  FinanceApp
 //
-//  Created by Тася Галкина on 20.06.2025.
+//  Created by Тася Галкина on 11.07.2025.
 //
 
-import SwiftUI
+import Foundation
 
 @MainActor
-final class TransactionViewModel: ObservableObject {
-    @Published var transactions: [Transaction] = []
-    @Published var categories: [Int: Category] = [:]
-    @Published var startDate: Date
-    @Published var endDate: Date
-    @Published var sortOption: SortOption = .date {
+final class AnalysisViewModel: ObservableObject {
+    var transactions: [Transaction] = []
+    var categories: [Int: Category] = [:]
+    var startDate: Date
+    var endDate: Date
+    var sortOption: SortOption = .date {
         didSet {
             sortTransactions()
+            onDataUpdate?()
         }
     }
     
     let direction: Direction
     let customDates: Bool
+    var onDataUpdate: (() -> Void)?
     
     private let transactionsService: TransactionsServiceProtocol = TransactionsService()
     private let categoriesService: CategoriesServiceProtocol = CategoriesService()
@@ -66,6 +68,7 @@ final class TransactionViewModel: ObservableObject {
             }
             
             sortTransactions()
+            onDataUpdate?()
         } catch {
             print("error with fetching transactions")
         }
@@ -78,5 +81,31 @@ final class TransactionViewModel: ObservableObject {
         case .amount:
             transactions.sort(by: { $0.amount < $1.amount })
         }
+    }
+    
+    func didChangeStartDate(to date: Date) -> Bool {
+        startDate = date
+        if endDate < date {
+            endDate = date
+            return true
+        }
+        return false
+    }
+    
+    func didChangeEndDate(to date: Date) -> Bool {
+        endDate = date
+        if startDate > date {
+            startDate = date
+            return true
+        }
+        return false
+    }
+    
+    func getPercentage(for transaction: Transaction) -> String {
+        guard totalAmount != 0 else {
+            return "0%"
+        }
+        let ratio = ((transaction.amount as NSDecimalNumber).doubleValue * 100) / (totalAmount as NSDecimalNumber).doubleValue 
+        return String(format: "%.2f%%", ratio)
     }
 }
