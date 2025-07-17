@@ -14,6 +14,10 @@ struct HistoryView: View {
     @State private var localStartDate: Date = Date()
     @State private var localEndDate: Date = Date()
     
+    @State private var isAnalysisTapped = false
+    
+    @State private var selectedTransaction: Transaction? = nil
+    
     init(direction: Direction) {
         _viewModel = StateObject(wrappedValue: TransactionViewModel(direction: direction, customDates: true))
     }
@@ -72,7 +76,7 @@ struct HistoryView: View {
                         }
                         
                         Picker(Constants.sortTitle, selection: $viewModel.sortOption) {
-                            ForEach(TransactionSortOption.allCases) { option in
+                            ForEach(SortOption.allCases) { option in
                                 Text(option.rawValue).tag(option)
                             }
                         }
@@ -89,6 +93,9 @@ struct HistoryView: View {
                                     category: viewModel.categories[transaction.categoryId],
                                     transaction: transaction
                                 )
+                                .onTapGesture {
+                                    selectedTransaction = transaction
+                                }
                             }
                         } header: {
                             Text(Constants.operationTitle)
@@ -99,6 +106,16 @@ struct HistoryView: View {
                 }
                 Spacer()
             }
+        }
+        .onAppear {
+            Task {
+                await viewModel.fetchInfo()
+            }
+        }
+        .fullScreenCover(item: $selectedTransaction, onDismiss: {
+            Task { await viewModel.fetchInfo() }
+        }) { transaction in
+            EditAndAddView(direction: viewModel.direction, transaction: transaction)
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -115,7 +132,7 @@ struct HistoryView: View {
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
-                    print("doc")
+                    isAnalysisTapped.toggle()
                 }) {
                     Image(systemName: "doc")
                         .tint(.button)
@@ -123,5 +140,16 @@ struct HistoryView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
+        .navigationDestination(isPresented: $isAnalysisTapped) {
+            AnalysisViewControllerRepresentable(
+                direction: viewModel.direction,
+                startDate: viewModel.startDate,
+                endDate: viewModel.endDate
+            )
+            .background(Color.background)
+            .ignoresSafeArea(edges: .all)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarHidden(true)
+        }
     }
 }

@@ -14,7 +14,7 @@ final class BankAccountViewModel: ObservableObject {
     
     @Published var showInvalidBalanceAlert: Bool = false
     
-    private let bankAccountService: BankAccountsServiceProtocol = BankAccountsService()
+    private let bankAccountService: BankAccountsServiceProtocol = BankAccountsService.shared
     
     func loadBankAccountInfo() async {
         do {

@@ -38,10 +38,32 @@ enum Constants {
     
     static let categoryTitle: String = "Мои статьи"
     static let categories: String = "Статьи"
-
+    
+    static let analysisTitle: String = "Анализ"
+    static let createButtonTitle: String = "Создать"
+    
+    static let date: String = "Дата"
+    static let time: String = "Время"
+    static let comments: String = "комментарий"
+    
+    static let deleteIncome: String =  "Удалить доход"
+    static let deleteOutcome: String =  "Удалить расход"
+    
+    static let cancel: String =  "Отменить"
+    static let saveAlert: String =  "необходимо заполнить все  поля👀"
+    
+    static let income = "Мои доходы"
+    static let outcome = "Мои расходы"
+    
+    static let category = "Статья"
+    static let notSelected = "Не выбрано"
+    static let amount = "Сумма"
+    static let amountDigitZero = "0"
+    
     static let cornerRadius: CGFloat = 8
     static let regularFontSize: CGFloat = 13
     static let titleFontSize: CGFloat = 34
     static let padding: CGFloat = 16
+    static let smallPadding: CGFloat = 8
     static let imageSize: CGFloat = 56
 }

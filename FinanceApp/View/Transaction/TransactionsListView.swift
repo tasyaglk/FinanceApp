@@ -10,6 +10,9 @@ import SwiftUI
 struct TransactionsListView: View {
     @StateObject private var viewModel: TransactionViewModel
     @State private var isHistoryTapped = false
+    @State private var isAddButtonTapped = false
+    
+    @State private var selectedTransaction: Transaction? = nil
     
     init(direction: Direction) {
         _viewModel = StateObject(wrappedValue: TransactionViewModel(direction: direction, customDates: false))
@@ -31,7 +34,7 @@ struct TransactionsListView: View {
                     List {
                         Section {
                             Picker(Constants.sortTitle, selection: $viewModel.sortOption) {
-                                ForEach(TransactionSortOption.allCases) { option in
+                                ForEach(SortOption.allCases) { option in
                                     Text(option.rawValue).tag(option)
                                 }
                             }
@@ -48,6 +51,9 @@ struct TransactionsListView: View {
                                         category: viewModel.categories[transaction.categoryId],
                                         transaction: transaction
                                     )
+                                    .onTapGesture {
+                                        selectedTransaction = transaction
+                                    }
                                 }
                             } header: {
                                 Text(Constants.operationTitle)
@@ -65,6 +71,7 @@ struct TransactionsListView: View {
                             HStack {
                                 Spacer()
                                 Button(action: {
+                                    isAddButtonTapped.toggle()
                                     print("add button tapped")
                                 }) {
                                     Image(systemName: "plus.circle.fill")
@@ -80,6 +87,21 @@ struct TransactionsListView: View {
                         }
                     }
                 )
+                .onAppear {
+                    Task {
+                        await viewModel.fetchInfo()
+                    }
+                }
+                .fullScreenCover(item: $selectedTransaction, onDismiss: {
+                    Task { await viewModel.fetchInfo() }
+                }) { transaction in
+                    EditAndAddView(direction: viewModel.direction, transaction: transaction)
+                }
+                .fullScreenCover(isPresented: $isAddButtonTapped, onDismiss: {
+                    Task { await viewModel.fetchInfo() }
+                }) {
+                    EditAndAddView(direction: viewModel.direction, transaction: nil)
+                }
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
