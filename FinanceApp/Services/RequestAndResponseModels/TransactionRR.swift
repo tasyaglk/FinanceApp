@@ -12,14 +12,14 @@ struct TransactionRequestDTO: Encodable {
     let categoryId: Int
     let amount: String
     let transactionDate: Date
-    let comment: String?
+    let comment: String
     
     init(from transaction: Transaction) {
         self.accountId = transaction.accountId
         self.categoryId = transaction.categoryId
         self.amount = NSDecimalNumber(decimal: transaction.amount).stringValue
         self.transactionDate = transaction.transactionDate
-        self.comment = transaction.comment
+        self.comment = transaction.comment ?? ""
     }
 }
 
