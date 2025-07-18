@@ -7,29 +7,21 @@
 
 import Foundation
 
-struct CategoryDTO: Codable {
+struct CategoryDTO: Decodable {
     let id: Int
     let name: String
     let emoji: String
-    let direction: Direction
-    
-    enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case emoji
-        case direction
-    }
+    let isIncome: Bool
     
     func toCategory() throws -> Category {
         guard let emojiChar = emoji.first, emoji.count == 1 else {
             throw NetworkError.decodingFailed(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid emoji format"]))
         }
-        
         return Category(
             id: id,
             name: name,
             emoji: emojiChar,
-            direction: direction
+            direction: isIncome ? .income : .outcome
         )
     }
 }

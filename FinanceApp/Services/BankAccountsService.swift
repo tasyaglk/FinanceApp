@@ -14,35 +14,28 @@ protocol BankAccountsServiceProtocol {
 
 final class BankAccountsService: BankAccountsServiceProtocol {
     static let shared = BankAccountsService()
-        
-        private init() {}
     
-    private var mockAccounts: [BankAccount] = [
-        BankAccount(
-            id: 1,
-            userId: 1,
-            name: "карта зп",
-            balance: 50000,
-            currency: "₽",
-            createdAt: Date(),
-            updatedAt: Date()
-        ),
-        BankAccount(
-            id: 2,
-            userId: 1,
-            name: "карта для путешествий",
-            balance: 100,
-            currency: "$",
-            createdAt: Date(),
-            updatedAt: Date()
-        )
-    ]
+    private let client: BankAccountsClientProtocol
+    
+    private init() {
+        self.client = BankAccountsClient(networkClient: NetworkClient())
+    }
     
     func getBankAccount() async throws -> BankAccount? {
-        return mockAccounts.first
+        switch await client.getBankAccount() {
+        case .success(let account):
+            return account
+        case .failure(let error):
+            throw error
+        }
     }
     
     func updateBankAccount(_ account: BankAccount) async throws {
-        mockAccounts[0] = account
+        switch await client.updateBankAccount(account) {
+        case .success:
+            return
+        case .failure(let error):
+            throw error
+        }
     }
 }

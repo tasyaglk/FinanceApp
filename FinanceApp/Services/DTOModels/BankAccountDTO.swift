@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct BankAccountDTO: Codable {
+struct BankAccountDTO: Decodable {
     let id: Int
     let userId: Int
     let name: String
@@ -18,7 +18,7 @@ struct BankAccountDTO: Codable {
     
     enum CodingKeys: String, CodingKey {
         case id
-        case userId = "userId"
+        case userId
         case name
         case balance
         case currency
@@ -28,9 +28,9 @@ struct BankAccountDTO: Codable {
     
     func toBankAccount() throws -> BankAccount {
         guard let balanceDecimal = Decimal(string: balance) else {
+            print("Invalid balance format: \(balance)")
             throw NetworkError.decodingFailed(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid balance format"]))
         }
-        
         return BankAccount(
             id: id,
             userId: userId,

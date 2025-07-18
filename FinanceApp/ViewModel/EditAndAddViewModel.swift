@@ -9,10 +9,9 @@ import SwiftUI
 
 @MainActor
 final class EditAndAddViewModel: ObservableObject {
-    
     let direction: Direction
     private let transactionsService: TransactionsServiceProtocol = TransactionsService.shared
-    private let categoriesService: CategoriesServiceProtocol = CategoriesService()
+    private let categoriesService: CategoriesServiceProtocol = CategoriesService.shared
     private let bankAccountService: BankAccountsServiceProtocol = BankAccountsService.shared
     
     @Published var seletedCategory: Category? = nil
@@ -23,8 +22,9 @@ final class EditAndAddViewModel: ObservableObject {
     @Published var categories: [Category] = []
     @Published var bankAccountInfo: BankAccount?
     @Published var selectedTransaction: Transaction?
-    
     @Published var showValidationAlert = false
+    @Published var errorMessage: String?
+    @Published var isLoading: Bool = false
     
     private var decimalSeparator: String {
         Locale.current.decimalSeparator ?? "."
@@ -65,26 +65,37 @@ final class EditAndAddViewModel: ObservableObject {
     }
     
     func fetchAllCategories() async {
+        isLoading = true
+        defer { isLoading = false }
+        
         do {
             self.categories = try await categoriesService.categories(direction: direction)
         } catch {
-            print("Error fetching categories")
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? "Неизвестная ошибка при загрузке категорий"
         }
     }
     
     func loadBankAccountInfo() async {
+        isLoading = true
+        defer { isLoading = false }
+        
         do {
             self.bankAccountInfo = try await bankAccountService.getBankAccount()
         } catch {
-            print("Error loading bank account")
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? "Неизвестная ошибка при загрузке счета"
         }
     }
     
     func saveTransaction() async {
+        guard validateInputs() else { return }
+        
         guard let category = seletedCategory,
               let account = bankAccountInfo,
               let amountDecimal = decimalAmount()
         else { return }
+        
+        isLoading = true
+        defer { isLoading = false }
         
         let transactionDateTime = combine(date: date, time: time)
         
@@ -99,62 +110,30 @@ final class EditAndAddViewModel: ObservableObject {
             updatedAt: Date()
         )
         
-        var newBalance = account.balance
-        
-        if direction == .outcome {
-            newBalance -= amountDecimal
-        } else {
-            newBalance += amountDecimal
-        }
-        
         do {
             if isEditing {
                 try await transactionsService.updateTransaction(transaction)
             } else {
                 try await transactionsService.createTransaction(transaction)
             }
-            
-            let updatedAccount = BankAccount(
-                id: account.id,
-                userId: account.userId,
-                name: account.name,
-                balance: newBalance,
-                currency: account.currency,
-                createdAt: account.createdAt,
-                updatedAt: Date()
-            )
-            try await bankAccountService.updateBankAccount(updatedAccount)
+            await loadBankAccountInfo()
         } catch {
-            print("Error saving transaction: \(error)")
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? "Неизвестная ошибка при сохранении транзакции"
         }
     }
     
     func deleteTransaction() async {
-        guard let transaction = selectedTransaction,
-              let account = bankAccountInfo else { return }
+        guard let transaction = selectedTransaction else { return }
+        
+        isLoading = true
+        defer { isLoading = false }
+        
         do {
-            let transactionAmount = transaction.amount
-            var newBalance = account.balance
-            
-            if direction == .outcome {
-                newBalance += transactionAmount
-            } else {
-                newBalance -= transactionAmount
-            }
-            
-            let updatedAccount = BankAccount(
-                id: account.id,
-                userId: account.userId,
-                name: account.name,
-                balance: newBalance,
-                currency: account.currency,
-                createdAt: account.createdAt,
-                updatedAt: Date()
-            )
-            try await bankAccountService.updateBankAccount(updatedAccount)
             try await transactionsService.deleteTransaction(withId: transaction.id)
+            // Синхронизируем баланс с сервером
+            await loadBankAccountInfo()
         } catch {
-            print("Error deleting transaction")
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? "Неизвестная ошибка при удалении транзакции"
         }
     }
     

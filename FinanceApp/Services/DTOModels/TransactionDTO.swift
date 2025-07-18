@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct TransactionDTO: Codable {
+struct TransactionDTO: Decodable {
     let id: Int
     let accountId: Int
     let categoryId: Int
@@ -17,22 +17,10 @@ struct TransactionDTO: Codable {
     let createdAt: Date
     let updatedAt: Date
     
-    enum CodingKeys: String, CodingKey {
-        case id
-        case accountId
-        case categoryId
-        case amount
-        case transactionDate
-        case comment
-        case createdAt
-        case updatedAt
-    }
-    
     func toTransaction() throws -> Transaction {
         guard let amountDecimal = Decimal(string: amount) else {
             throw NetworkError.decodingFailed(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid amount format"]))
         }
-        
         return Transaction(
             id: id,
             accountId: accountId,

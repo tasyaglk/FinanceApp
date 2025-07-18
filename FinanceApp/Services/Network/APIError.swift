@@ -29,7 +29,20 @@ enum NetworkError: Error, LocalizedError {
         case .invalidURL:
             return "Неверный URL запроса"
         case .requestFailed(let statusCode, let error):
-            return error?.message ?? "Ошибка запроса: \(statusCode)"
+            switch statusCode {
+            case 400:
+                return error?.message ?? "Некорректные данные или неверный формат ID"
+            case 401:
+                return error?.message ?? "Неавторизованный доступ"
+            case 404:
+                return error?.message ?? "Ресурс не найден"
+            case 409:
+                return error?.message ?? "Конфликт - у счета есть транзакции"
+            case 500:
+                return error?.message ?? "Внутренняя ошибка сервера"
+            default:
+                return error?.message ?? "Ошибка запроса: \(statusCode)"
+            }
         case .decodingFailed:
             return "Ошибка декодирования ответа"
         case .encodingFailed:
