@@ -10,6 +10,7 @@ import SwiftUI
 struct TransactionRow: View {
     let category: Category?
     let transaction: Transaction
+    let symbol: String
     
     var body: some View {
         HStack {
@@ -34,7 +35,7 @@ struct TransactionRow: View {
             
             Spacer()
             
-            Text("\(transaction.amount) \(Constants.russianCurrency)")
+            Text("\(transaction.amount) \(symbol)")
                 .font(.system(size: 17))
             
             Image(systemName: "chevron.right")

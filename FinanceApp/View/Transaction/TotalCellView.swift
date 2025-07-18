@@ -10,6 +10,7 @@ import SwiftUI
 struct TotalCellView: View {
     let title: String
     let total: Decimal
+    let symbol: String
     
     var body: some View {
         HStack {
@@ -18,7 +19,7 @@ struct TotalCellView: View {
             
             Spacer()
             
-            Text("\(total) \(Constants.russianCurrency)")
+            Text("\(total) \(symbol)")
                 .font(.system(size: 17))
             
         }

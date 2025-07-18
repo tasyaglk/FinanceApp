@@ -19,6 +19,7 @@ final class TransactionViewModel: ObservableObject {
         }
     }
     @Published var totalAmount: Decimal = 0
+    @Published var currency: String = CurrencyTypes.rub.symbol
     @Published var errorMessage: String?
     @Published var isLoading: Bool = false
     
@@ -27,6 +28,7 @@ final class TransactionViewModel: ObservableObject {
     
     private let transactionsService: TransactionsServiceProtocol = TransactionsService.shared
     private let categoriesService: CategoriesServiceProtocol = CategoriesService.shared
+    private let bankAccountService: BankAccountsServiceProtocol = BankAccountsService.shared
     
     init(direction: Direction, customDates: Bool = false) {
         self.direction = direction
@@ -67,6 +69,9 @@ final class TransactionViewModel: ObservableObject {
                 return false
             }
             self.totalAmount = self.transactions.map { $0.amount }.reduce(0, +)
+            
+             let bankAccount = try await bankAccountService.getBankAccount()
+            self.currency =  bankAccount?.currency ?? "$"
             
             sortTransactions()
         } catch {

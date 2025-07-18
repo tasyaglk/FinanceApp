@@ -38,7 +38,7 @@ struct TransactionsListView: View {
                             }
                             .tint(.black)
                             .pickerStyle(.menu)
-                            TotalCellView(title: Constants.total, total: viewModel.totalAmount)
+                            TotalCellView(title: Constants.total, total: viewModel.totalAmount, symbol: viewModel.currency)
                         }
                         
                         if !viewModel.transactions.isEmpty {
@@ -46,7 +46,7 @@ struct TransactionsListView: View {
                                 ForEach(viewModel.transactions) { transaction in
                                     TransactionRow(
                                         category: viewModel.categories[transaction.categoryId],
-                                        transaction: transaction
+                                        transaction: transaction, symbol: viewModel.currency
                                     )
                                     .onTapGesture {
                                         selectedTransaction = transaction
