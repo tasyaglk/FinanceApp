@@ -52,23 +52,17 @@ final class NetworkClient: NetworkClientProtocol {
         switch httpResponse.statusCode {
         case 200...299:
             do {
-                if let responseBodyString = String(data: data, encoding: .utf8) {
-                    print("--------- SERVER RESPONSE ---------")
-                    print(responseBodyString)
-                    print("--------- SERVER RESPONSE ---------")
-                }
-
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .custom { decoder in
                     let container = try decoder.singleValueContainer()
                     let dateString = try container.decode(String.self)
-
+                    
                     let formats = [
                         "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ",
                         "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
                         "yyyy-MM-dd'T'HH:mm:ssZ"
                     ]
-
+                    
                     for format in formats {
                         let formatter = DateFormatter()
                         formatter.dateFormat = format
@@ -78,21 +72,16 @@ final class NetworkClient: NetworkClientProtocol {
                             return date
                         }
                     }
-
+                    
                     throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid date format: \(dateString)")
                 }
-
+                
                 return try decoder.decode(T.self, from: data)
             } catch {
-                if let responseBodyString = String(data: data, encoding: .utf8) {
-                    print("--------- SERVER RESPONSE (Decoding Failed) ---------")
-                    print(responseBodyString)
-                    print("--------- SERVER RESPONSE (Decoding Failed) ---------")
-                }
-
+                
                 throw NetworkError.decodingFailed(error)
             }
-
+            
         case 400, 401, 404, 409, 500:
             let error = try? JSONDecoder().decode(APIError.self, from: data)
             throw NetworkError.requestFailed(statusCode: httpResponse.statusCode, error: error)

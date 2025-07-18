@@ -28,7 +28,6 @@ struct BankAccountDTO: Decodable {
     
     func toBankAccount() throws -> BankAccount {
         guard let balanceDecimal = Decimal(string: balance) else {
-            print("Invalid balance format: \(balance)")
             throw NetworkError.decodingFailed(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid balance format"]))
         }
         return BankAccount(

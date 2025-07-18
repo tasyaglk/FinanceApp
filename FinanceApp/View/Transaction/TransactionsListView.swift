@@ -69,7 +69,6 @@ struct TransactionsListView: View {
                                 Spacer()
                                 Button(action: {
                                     isAddButtonTapped.toggle()
-                                    print("add button tapped")
                                 }) {
                                     Image(systemName: "plus.circle.fill")
                                         .resizable()
