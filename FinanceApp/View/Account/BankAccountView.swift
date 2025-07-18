@@ -10,10 +10,8 @@ import SwiftUI
 struct BankAccountView: View {
     @StateObject private var viewModel = BankAccountViewModel()
     @State private var showCurrencyPicker = false
-    
     @State private var editingBalanceText: String = ""
     @FocusState private var isBalanceFieldFocused: Bool
-    
     @State private var isSpoilerOn = false
     
     var body: some View {
@@ -37,11 +35,28 @@ struct BankAccountView: View {
                     
                     Spacer()
                 }
+                
+                if viewModel.isLoading {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .scaleEffect(1.5)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Color.black.opacity(0.2))
+                        .ignoresSafeArea()
+                }
             }
             .alert(Constants.alertTitle, isPresented: $viewModel.showInvalidBalanceAlert) {
                 Button(Constants.alertButton, role: .cancel) { }
             } message: {
                 Text(Constants.alertMessage)
+            }
+            .alert("ошибка", isPresented: Binding(
+                get: { viewModel.errorMessage != nil },
+                set: { _ in viewModel.errorMessage = nil }
+            )) {
+                Button("ок", role: .cancel) { }
+            } message: {
+                Text(viewModel.errorMessage ?? "оаоаоа а что говорить...")
             }
             .scrollDismissesKeyboard(.immediately)
             .refreshable {
@@ -74,14 +89,11 @@ struct BankAccountView: View {
         .tint(.button)
     }
     
-    private var balanceView:some View {
+    private var balanceView: some View {
         HStack {
             Text(Constants.moneyEmoji)
-            
             Text(Constants.balance)
-            
             Spacer()
-            
             if viewModel.isEditing {
                 TextField(
                     "",
@@ -92,11 +104,6 @@ struct BankAccountView: View {
                 .multilineTextAlignment(.trailing)
                 .focused($isBalanceFieldFocused)
                 .onAppear {
-                    if let newBalance = Decimal(string: editingBalanceText) {
-                        Task {
-                            await viewModel.updateBalanceInfo(newBalance)
-                        }
-                    }
                     editingBalanceText = "\(viewModel.bankAccountInfo?.balance ?? 0)"
                     isBalanceFieldFocused = true
                 }
@@ -115,9 +122,7 @@ struct BankAccountView: View {
     private var currencySection: some View {
         HStack {
             Text(Constants.currency)
-            
             Spacer()
-            
             Text(viewModel.bankAccountInfo?.currency ?? CurrencyTypes.rub.symbol)
                 .onTapGesture {
                     if viewModel.isEditing {
@@ -125,7 +130,6 @@ struct BankAccountView: View {
                     }
                 }
                 .foregroundColor(viewModel.isEditing ? Color.lightGray : .black)
-            
             if viewModel.isEditing {
                 Image(systemName: "chevron.right")
                     .foregroundColor(Color.lightGray)
