@@ -65,9 +65,6 @@ final class TransactionsService: TransactionsServiceProtocol {
         do {
             switch await bankAccountsClient.getBankAccount() {
             case .success(let account):
-//                guard let account = account else {
-//                    throw TransactionsServiceError.accountNotFound
-//                }
                 switch await client.fetchTransactions(accountId: account.id, from: startDate, to: endDate) {
                 case .success(let networkTransactions):
                     for transaction in networkTransactions {
@@ -114,7 +111,7 @@ final class TransactionsService: TransactionsServiceProtocol {
                 try storage.saveBackup(transaction, operationType: .create)
                 try storage.create(transaction)
                 transactions.append(transaction)
-                try await updateAccountBalance(transaction: transaction) // Update balance in offline mode
+                try await updateAccountBalance(transaction: transaction)
                 try await saveAccountBackup()
                 throw error
             }
@@ -122,7 +119,7 @@ final class TransactionsService: TransactionsServiceProtocol {
             try storage.saveBackup(transaction, operationType: .create)
             try storage.create(transaction)
             transactions.append(transaction)
-            try await updateAccountBalance(transaction: transaction) // Update balance in offline mode
+            try await updateAccountBalance(transaction: transaction)
             try await saveAccountBackup()
             throw error
         }
@@ -152,7 +149,7 @@ final class TransactionsService: TransactionsServiceProtocol {
             try storage.saveBackup(transaction, operationType: .update)
             try storage.update(transaction)
             transactions[index] = transaction
-            try await updateAccountBalance(transaction: transaction) // Update balance in offline mode
+            try await updateAccountBalance(transaction: transaction)
             try await saveAccountBackup()
             throw error
         }
@@ -182,7 +179,7 @@ final class TransactionsService: TransactionsServiceProtocol {
             try storage.saveBackup(transactions[index], operationType: .delete)
             try storage.delete(id: id)
             transactions.remove(at: index)
-            try await updateAccountBalance() // Update balance in offline mode
+            try await updateAccountBalance()
             try await saveAccountBackup()
             throw error
         }
@@ -230,7 +227,6 @@ final class TransactionsService: TransactionsServiceProtocol {
             guard let category = categories.first(where: { $0.id == transaction.categoryId }) else {
                 throw TransactionsServiceError.invalidTransaction
             }
-//            updatedBalance = updatedBalance
         } else {
             let transactions = try storage.fetchAll()
             let categories = try await CategoriesService.shared.categories()
