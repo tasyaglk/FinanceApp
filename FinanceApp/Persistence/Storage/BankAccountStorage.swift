@@ -9,28 +9,56 @@ import Foundation
 import SwiftData
 
 protocol BankAccountStorageProtocol {
-    func fetchAccount() async throws -> BankAccountStorageModel?
-    func updateAccount(_ account: BankAccountStorageModel) async throws
+    func getAccount() throws -> BankAccount?
+    func update(_ account: BankAccount) throws
+    func saveBackup(_ account: BankAccount, operationType: BackupOperationType) throws
+    func fetchBackup() throws -> [BackupTransaction]
+    func deleteBackup(id: Int) throws
 }
 
-@MainActor
 final class BankAccountStorage: BankAccountStorageProtocol {
-    private let modelContainer: ModelContainer
     private let modelContext: ModelContext
     
-    init() throws {
-        let schema = Schema([BankAccountStorageModel.self])
-        modelContainer = try ModelContainer(for: schema, configurations: [])
-        modelContext = modelContainer.mainContext
+    init(modelContainer: ModelContainer) {
+        self.modelContext = ModelContext(modelContainer)
     }
     
-    func fetchAccount() async throws -> BankAccountStorageModel? {
-        let descriptor = FetchDescriptor<BankAccountStorageModel>()
-        return try modelContext.fetch(descriptor).first
+    func getAccount() throws -> BankAccount? {
+        let descriptor = FetchDescriptor<PersistentBankAccount>()
+        return try modelContext.fetch(descriptor).first?.toBankAccount
     }
     
-    func updateAccount(_ account: BankAccountStorageModel) async throws {
-        modelContext.insert(account)
+    func update(_ account: BankAccount) throws {
+        let predicate = #Predicate<PersistentBankAccount> { $0.id == account.id }
+        let descriptor = FetchDescriptor<PersistentBankAccount>(predicate: predicate)
+        if let existingAccount = try modelContext.fetch(descriptor).first {
+            existingAccount.name = account.name
+            existingAccount.balance = account.balance
+            existingAccount.currency = account.currency
+            existingAccount.updatedAt = account.updatedAt
+        } else {
+            let persistentAccount = PersistentBankAccount(account: account)
+            modelContext.insert(persistentAccount)
+        }
+        try modelContext.save()
+    }
+    
+    func saveBackup(_ account: BankAccount, operationType: BackupOperationType) throws {
+        let backup = BackupTransaction(id: account.id, operationType: operationType, transaction: Transaction(id: account.id, accountId: account.id, categoryId: 0, amount: account.balance, transactionDate: account.updatedAt, createdAt: account.createdAt, updatedAt: account.updatedAt))
+        modelContext.insert(backup)
+        try modelContext.save()
+    }
+    
+    func fetchBackup() throws -> [BackupTransaction] {
+        let descriptor = FetchDescriptor<BackupTransaction>()
+        return try modelContext.fetch(descriptor)
+    }
+    
+    func deleteBackup(id: Int) throws {
+        let predicate = #Predicate<BackupTransaction> { $0.id == id }
+        let descriptor = FetchDescriptor<BackupTransaction>(predicate: predicate)
+        let backups = try modelContext.fetch(descriptor)
+        backups.forEach { modelContext.delete($0) }
         try modelContext.save()
     }
 }
