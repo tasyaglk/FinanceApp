@@ -35,55 +35,63 @@ final class CategoriesService: CategoriesServiceProtocol {
     
     func categories() async throws -> [Category] {
         do {
-            switch await client.categories() {
+            let result = await client.categories()
+            switch result {
             case .success(let categories):
                 print("Received \(categories.count) categories from network")
-                let descriptor = FetchDescriptor<PersistentCategory>()
-                let existingCategories = try modelContext.fetch(descriptor)
+                let uniqueCategories = categories.removingDuplicates(by: \.id)
+                print("After deduplication, \(uniqueCategories.count) unique categories")
                 
-                let existingCategoryIDs = Set(existingCategories.map { $0.id })
-                
-                for category in categories {
-                    if !existingCategoryIDs.contains(category.id) {
-                        print("Inserting new category: id=\(category.id), name=\(category.name), emoji=\(category.emoji), direction=\(category.direction)")
-                        let persistentCategory = PersistentCategory(category: category)
-                        modelContext.insert(persistentCategory)
-                    } else {
-                        if let existingCategory = existingCategories.first(where: { $0.id == category.id }),
-                           existingCategory.name != category.name ||
-                           existingCategory.emoji != category.emoji ||
-                           existingCategory.direction != category.direction.rawValue {
-                            print("Updating category: id=\(category.id), name=\(category.name), emoji=\(category.emoji), direction=\(category.direction)")
-                            existingCategory.name = category.name
-                            existingCategory.emoji = category.emoji
-                            existingCategory.direction = category.direction.rawValue
+                return try await MainActor.run {
+                    let descriptor = FetchDescriptor<PersistentCategory>()
+                    let existingCategories = try modelContext.fetch(descriptor)
+                    let existingCategoryIDs = Set(existingCategories.map { $0.id })
+                    
+                    for category in uniqueCategories {
+                        if let existingCategory = existingCategories.first(where: { $0.id == category.id }) {
+                            if existingCategory.name != category.name ||
+                               existingCategory.emoji != category.emoji ||
+                               existingCategory.direction != category.direction.rawValue {
+                                print("Updating category: id=\(category.id), name=\(category.name), emoji=\(category.emoji), direction=\(category.direction)")
+                                existingCategory.name = category.name
+                                existingCategory.emoji = category.emoji
+                                existingCategory.direction = category.direction.rawValue
+                            }
+                        } else {
+                            print("Inserting new category: id=\(category.id), name=\(category.name), emoji=\(category.emoji), direction=\(category.direction)")
+                            let persistentCategory = PersistentCategory(category: category)
+                            modelContext.insert(persistentCategory)
                         }
                     }
-                }
-                
-                for existingCategory in existingCategories {
-                    if !categories.contains(where: { $0.id == existingCategory.id }) {
-                        print("Deleting category: id=\(existingCategory.id)")
-                        modelContext.delete(existingCategory)
+                    
+                    for existingCategory in existingCategories {
+                        if !uniqueCategories.contains(where: { $0.id == existingCategory.id }) {
+                            print("Deleting category: id=\(existingCategory.id)")
+                            modelContext.delete(existingCategory)
+                        }
                     }
+                    
+                    do {
+                        try modelContext.save()
+                    } catch {
+                        print("Failed to save categories in SwiftData: \(error)")
+                        throw error
+                    }
+                    
+                    return uniqueCategories
                 }
-                
-                do {
-                    try modelContext.save()
-                } catch {
-                    print("Failed to save categories in SwiftData: \(error)")
-                    throw error
-                }
-                
-                return categories
             case .failure(let error):
                 throw error
             }
         } catch {
             print("Network failed, fetching from local storage: \(error)")
-            let descriptor = FetchDescriptor<PersistentCategory>()
-            let persistentCategories = try modelContext.fetch(descriptor)
-            return persistentCategories.map { $0.toCategory }
+            return try await MainActor.run {
+                let descriptor = FetchDescriptor<PersistentCategory>()
+                let persistentCategories = try modelContext.fetch(descriptor)
+                let uniqueCategories = persistentCategories.map { $0.toCategory }.removingDuplicates(by: \.id)
+                print("Returning \(uniqueCategories.count) unique categories from local storage")
+                return uniqueCategories
+            }
         }
     }
     
