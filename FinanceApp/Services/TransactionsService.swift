@@ -36,12 +36,14 @@ protocol TransactionsServiceProtocol {
     func getId() -> Int
 }
 
+@MainActor
 final class TransactionsService: TransactionsServiceProtocol {
     static let shared = TransactionsService()
     
     private let client: TransactionsClientProtocol
     private let bankAccountsClient: BankAccountsClientProtocol
     private let storage: TransactionStorageProtocol
+    private let bankAccountStorage: BankAccountStorageProtocol
     private var transactions: [Transaction] = []
     
     private init() {
@@ -49,9 +51,11 @@ final class TransactionsService: TransactionsServiceProtocol {
         self.client = TransactionsClient(networkClient: networkClient)
         self.bankAccountsClient = BankAccountsClient(networkClient: networkClient)
         do {
+            let container = try ModelContainer(for: Schema([PersistentTransaction.self, BackupTransaction.self, PersistentBankAccount.self, PersistentCategory.self]))
             self.storage = try TransactionStorage()
+            self.bankAccountStorage = BankAccountStorage(modelContainer: container)
         } catch {
-            fatalError("Failed to initialize TransactionStorage: \(error)")
+            fatalError("Failed to initialize storage: \(error)")
         }
     }
     
@@ -61,7 +65,9 @@ final class TransactionsService: TransactionsServiceProtocol {
         do {
             switch await bankAccountsClient.getBankAccount() {
             case .success(let account):
-                let account = account
+//                guard let account = account else {
+//                    throw TransactionsServiceError.accountNotFound
+//                }
                 switch await client.fetchTransactions(accountId: account.id, from: startDate, to: endDate) {
                 case .success(let networkTransactions):
                     for transaction in networkTransactions {
@@ -108,6 +114,7 @@ final class TransactionsService: TransactionsServiceProtocol {
                 try storage.saveBackup(transaction, operationType: .create)
                 try storage.create(transaction)
                 transactions.append(transaction)
+                try await updateAccountBalance(transaction: transaction) // Update balance in offline mode
                 try await saveAccountBackup()
                 throw error
             }
@@ -115,6 +122,7 @@ final class TransactionsService: TransactionsServiceProtocol {
             try storage.saveBackup(transaction, operationType: .create)
             try storage.create(transaction)
             transactions.append(transaction)
+            try await updateAccountBalance(transaction: transaction) // Update balance in offline mode
             try await saveAccountBackup()
             throw error
         }
@@ -136,6 +144,7 @@ final class TransactionsService: TransactionsServiceProtocol {
                 try storage.saveBackup(transaction, operationType: .update)
                 try storage.update(transaction)
                 transactions[index] = transaction
+                try await updateAccountBalance(transaction: transaction) // Update balance in offline mode
                 try await saveAccountBackup()
                 throw error
             }
@@ -143,6 +152,7 @@ final class TransactionsService: TransactionsServiceProtocol {
             try storage.saveBackup(transaction, operationType: .update)
             try storage.update(transaction)
             transactions[index] = transaction
+            try await updateAccountBalance(transaction: transaction) // Update balance in offline mode
             try await saveAccountBackup()
             throw error
         }
@@ -164,6 +174,7 @@ final class TransactionsService: TransactionsServiceProtocol {
                 try storage.saveBackup(transactions[index], operationType: .delete)
                 try storage.delete(id: id)
                 transactions.remove(at: index)
+                try await updateAccountBalance() // Update balance in offline mode
                 try await saveAccountBackup()
                 throw error
             }
@@ -171,6 +182,7 @@ final class TransactionsService: TransactionsServiceProtocol {
             try storage.saveBackup(transactions[index], operationType: .delete)
             try storage.delete(id: id)
             transactions.remove(at: index)
+            try await updateAccountBalance() // Update balance in offline mode
             try await saveAccountBackup()
             throw error
         }
@@ -201,19 +213,33 @@ final class TransactionsService: TransactionsServiceProtocol {
     }
     
     private func updateAccountBalance(transaction: Transaction? = nil) async throws {
-        let account = try await bankAccountsClient.getBankAccount().get()
+        var account: BankAccount?
+        do {
+            account = try await bankAccountsClient.getBankAccount().get()
+        } catch {
+            account = try bankAccountStorage.getAccount()
+        }
+        
+        guard let account = account else {
+            throw TransactionsServiceError.accountNotFound
+        }
         
         var updatedBalance = account.balance
         if let transaction = transaction {
             let categories = try await CategoriesService.shared.categories()
-            let category = categories.first { $0.id == transaction.categoryId }
-            updatedBalance += category?.isIncome == true ? transaction.amount : -transaction.amount
+            guard let category = categories.first(where: { $0.id == transaction.categoryId }) else {
+                throw TransactionsServiceError.invalidTransaction
+            }
+//            updatedBalance = updatedBalance
         } else {
             let transactions = try storage.fetchAll()
             let categories = try await CategoriesService.shared.categories()
             updatedBalance = transactions.reduce(Decimal(0)) { balance, transaction in
-                let category = categories.first { $0.id == transaction.categoryId }
-                return balance + (category?.isIncome == true ? transaction.amount : -transaction.amount)
+                guard let category = categories.first(where: { $0.id == transaction.categoryId }) else {
+                    return balance
+                }
+                let ans =  balance + (category.isIncome ? transaction.amount : -transaction.amount)
+                return ans
             }
         }
         
@@ -226,11 +252,22 @@ final class TransactionsService: TransactionsServiceProtocol {
             createdAt: account.createdAt,
             updatedAt: Date()
         )
+        
+        try bankAccountStorage.update(updatedAccount)
         try await BankAccountsService.shared.updateBankAccount(updatedAccount)
     }
     
     private func saveAccountBackup() async throws {
-        let account = try await bankAccountsClient.getBankAccount().get()
+        var account: BankAccount?
+        do {
+            account = try await bankAccountsClient.getBankAccount().get()
+        } catch {
+            account = try bankAccountStorage.getAccount()
+        }
+        
+        guard let account = account else {
+            throw TransactionsServiceError.accountNotFound
+        }
         try await BankAccountsService.shared.saveBackup(account, operationType: .update)
     }
 }
