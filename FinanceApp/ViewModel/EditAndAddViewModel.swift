@@ -130,7 +130,6 @@ final class EditAndAddViewModel: ObservableObject {
         
         do {
             try await transactionsService.deleteTransaction(withId: transaction.id)
-            // Синхронизируем баланс с сервером
             await loadBankAccountInfo()
         } catch {
             errorMessage = (error as? LocalizedError)?.errorDescription ?? "Неизвестная ошибка при удалении транзакции"

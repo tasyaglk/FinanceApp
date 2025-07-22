@@ -67,7 +67,6 @@ final class TransactionsService: TransactionsServiceProtocol {
             case .success(let account):
                 switch await client.fetchTransactions(accountId: account.id, from: startDate, to: endDate) {
                 case .success(let networkTransactions):
-                    // Обновляем хранилище, очищая старое и вставляя новое
                     let existing = try storage.fetchAll()
                     for tx in existing {
                         try? storage.delete(id: tx.id)
@@ -86,7 +85,7 @@ final class TransactionsService: TransactionsServiceProtocol {
         } catch {
             let local = try storage.fetchAll()
             let backup = try storage.fetchBackup().map { $0.transaction }
-            transactions = (local + backup).removingDuplicates(by: \ .id)
+            transactions = (local + backup).removingDuplicates(by: \.id)
             return transactions.filter { $0.transactionDate >= startDate && $0.transactionDate <= endDate }
         }
     }
@@ -96,20 +95,27 @@ final class TransactionsService: TransactionsServiceProtocol {
             throw TransactionsServiceError.transactionExists(id: transaction.id)
         }
         
+        var isOffline = false
+        
         do {
             switch await client.createTransaction(transaction) {
             case .success:
                 break
             case .failure:
                 try storage.saveBackup(transaction, operationType: .create)
+                isOffline = true
             }
         } catch {
             try storage.saveBackup(transaction, operationType: .create)
+            isOffline = true
         }
         
         try storage.create(transaction)
         transactions.append(transaction)
-        try await updateAccountBalance()
+        
+        if isOffline {
+            try await updateAccountBalance()
+        }
     }
     
     func updateTransaction(_ transaction: Transaction) async throws {
@@ -117,20 +123,27 @@ final class TransactionsService: TransactionsServiceProtocol {
             throw TransactionsServiceError.transactionNotFound(id: transaction.id)
         }
         
+        var isOffline = false
+        
         do {
             switch await client.updateTransaction(transaction) {
             case .success:
                 try? storage.deleteBackup(id: transaction.id)
             case .failure:
                 try storage.saveBackup(transaction, operationType: .update)
+                isOffline = true
             }
         } catch {
             try storage.saveBackup(transaction, operationType: .update)
+            isOffline = true
         }
         
         try storage.update(transaction)
         transactions[index] = transaction
-        try await updateAccountBalance()
+        
+        if isOffline {
+            try await updateAccountBalance()
+        }
     }
     
     func deleteTransaction(withId id: Int) async throws {
@@ -139,6 +152,7 @@ final class TransactionsService: TransactionsServiceProtocol {
         }
         
         let transaction = transactions[index]
+        var isOffline = false
         
         do {
             switch await client.deleteTransaction(withId: id) {
@@ -146,14 +160,19 @@ final class TransactionsService: TransactionsServiceProtocol {
                 try? storage.deleteBackup(id: id)
             case .failure:
                 try storage.saveBackup(transaction, operationType: .delete)
+                isOffline = true
             }
         } catch {
             try storage.saveBackup(transaction, operationType: .delete)
+            isOffline = true
         }
         
         try storage.delete(id: id)
         transactions.remove(at: index)
-        try await updateAccountBalance()
+        
+        if isOffline {
+            try await updateAccountBalance()
+        }
     }
     
     func getId() -> Int {
@@ -198,11 +217,12 @@ final class TransactionsService: TransactionsServiceProtocol {
         
         let newBalance = all.reduce(Decimal(0)) { sum, tx in
             guard let cat = categories.first(where: { $0.id == tx.categoryId }) else { return sum }
-            return sum + (cat.isIncome ? tx.amount : -tx.amount)
+            return acc.balance + (cat.isIncome ? tx.amount : -tx.amount)
         }
         
         let updatedAccount = BankAccount(
-            id: acc.id, userId: acc.userId,
+            id: acc.id,
+            userId: acc.userId,
             name: acc.name,
             balance: newBalance,
             currency: acc.currency,
@@ -210,8 +230,8 @@ final class TransactionsService: TransactionsServiceProtocol {
             updatedAt: acc.updatedAt
         )
         
-        try bankAccountStorage.update(acc)
-        try await BankAccountsService.shared.updateBankAccount(acc)
+        try bankAccountStorage.update(updatedAccount)
+        try await BankAccountsService.shared.updateBankAccount(updatedAccount)
     }
 }
 
