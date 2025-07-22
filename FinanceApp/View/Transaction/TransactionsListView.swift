@@ -11,7 +11,6 @@ struct TransactionsListView: View {
     @StateObject private var viewModel: TransactionViewModel
     @State private var isHistoryTapped = false
     @State private var isAddButtonTapped = false
-    
     @State private var selectedTransaction: Transaction? = nil
     
     init(direction: Direction) {
@@ -26,7 +25,6 @@ struct TransactionsListView: View {
                     HStack {
                         Text(viewModel.direction == .income ? Constants.incomeTitle : Constants.outcomeTitle)
                             .font(.system(size: CGFloat(Constants.titleFontSize), weight: .bold))
-                        
                         Spacer()
                     }
                     .padding(.horizontal, Constants.padding)
@@ -40,8 +38,7 @@ struct TransactionsListView: View {
                             }
                             .tint(.black)
                             .pickerStyle(.menu)
-                            
-                            TotalCellView(title: Constants.total, total: viewModel.totalAmount)
+                            TotalCellView(title: Constants.total, total: viewModel.totalAmount, symbol: viewModel.currency)
                         }
                         
                         if !viewModel.transactions.isEmpty {
@@ -49,7 +46,7 @@ struct TransactionsListView: View {
                                 ForEach(viewModel.transactions) { transaction in
                                     TransactionRow(
                                         category: viewModel.categories[transaction.categoryId],
-                                        transaction: transaction
+                                        transaction: transaction, symbol: viewModel.currency
                                     )
                                     .onTapGesture {
                                         selectedTransaction = transaction
@@ -72,7 +69,6 @@ struct TransactionsListView: View {
                                 Spacer()
                                 Button(action: {
                                     isAddButtonTapped.toggle()
-                                    print("add button tapped")
                                 }) {
                                     Image(systemName: "plus.circle.fill")
                                         .resizable()
@@ -87,35 +83,52 @@ struct TransactionsListView: View {
                         }
                     }
                 )
-                .onAppear {
-                    Task {
-                        await viewModel.fetchInfo()
+                
+                if viewModel.isLoading {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .scaleEffect(1.5)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Color.black.opacity(0.2))
+                        .ignoresSafeArea()
+                }
+            }
+            .onAppear {
+                Task {
+                    await viewModel.fetchInfo()
+                }
+            }
+            .fullScreenCover(item: $selectedTransaction, onDismiss: {
+                Task { await viewModel.fetchInfo() }
+            }) { transaction in
+                EditAndAddView(direction: viewModel.direction, transaction: transaction)
+            }
+            .fullScreenCover(isPresented: $isAddButtonTapped, onDismiss: {
+                Task { await viewModel.fetchInfo() }
+            }) {
+                EditAndAddView(direction: viewModel.direction, transaction: nil)
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        isHistoryTapped.toggle()
+                    }) {
+                        Image(systemName: "clock")
+                            .tint(.button)
                     }
                 }
-                .fullScreenCover(item: $selectedTransaction, onDismiss: {
-                    Task { await viewModel.fetchInfo() }
-                }) { transaction in
-                    EditAndAddView(direction: viewModel.direction, transaction: transaction)
-                }
-                .fullScreenCover(isPresented: $isAddButtonTapped, onDismiss: {
-                    Task { await viewModel.fetchInfo() }
-                }) {
-                    EditAndAddView(direction: viewModel.direction, transaction: nil)
-                }
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            isHistoryTapped.toggle()
-                        }) {
-                            Image(systemName: "clock")
-                                .tint(.button)
-                        }
-                    }
-                }
-                .navigationBarHidden(false)
-                .navigationDestination(isPresented: $isHistoryTapped) {
-                    HistoryView(direction: viewModel.direction)
-                }
+            }
+            .navigationBarHidden(false)
+            .navigationDestination(isPresented: $isHistoryTapped) {
+                HistoryView(direction: viewModel.direction)
+            }
+            .alert("ошибка", isPresented: Binding(
+                get: { viewModel.errorMessage != nil },
+                set: { _ in viewModel.errorMessage = nil }
+            )) {
+                Button("ок", role: .cancel) { }
+            } message: {
+                Text(viewModel.errorMessage ?? "оаоаоа а что говорить...")
             }
         }
     }

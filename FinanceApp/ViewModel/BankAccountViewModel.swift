@@ -11,24 +11,29 @@ import SwiftUI
 final class BankAccountViewModel: ObservableObject {
     @Published var bankAccountInfo: BankAccount?
     @Published var isEditing: Bool = false
-    
     @Published var showInvalidBalanceAlert: Bool = false
+    @Published var errorMessage: String?
+    @Published var isLoading: Bool = false
     
     private let bankAccountService: BankAccountsServiceProtocol = BankAccountsService.shared
     
     func loadBankAccountInfo() async {
+        isLoading = true
+        defer { isLoading = false }
+        
         do {
-            self.bankAccountInfo = try await  bankAccountService.getBankAccount() ?? nil
+            bankAccountInfo = try await bankAccountService.getBankAccount()
         } catch {
-            print("cant get bank account")
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? "Неизвестная ошибка при загрузке счета"
         }
     }
     
-    func updateCurrencyInfo( _ newCurrency: String) async {
-        
+    func updateCurrencyInfo(_ newCurrency: String) async {
         guard let bankAccountInfo = bankAccountInfo else { return }
-        
         guard bankAccountInfo.currency != newCurrency else { return }
+        
+        isLoading = true
+        defer { isLoading = false }
         
         let newBankAccount = BankAccount(
             id: bankAccountInfo.id,
@@ -37,19 +42,21 @@ final class BankAccountViewModel: ObservableObject {
             balance: bankAccountInfo.balance,
             currency: newCurrency,
             createdAt: bankAccountInfo.createdAt,
-            updatedAt: bankAccountInfo.updatedAt
+            updatedAt: Date()
         )
         do {
-            try await  bankAccountService.updateBankAccount(newBankAccount)
-            try await loadBankAccountInfo()
+            try await bankAccountService.updateBankAccount(newBankAccount)
+            await loadBankAccountInfo()
         } catch {
-            print("cant save bank account")
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? "Неизвестная ошибка при обновлении валюты"
         }
     }
     
     func updateBalanceInfo(_ newBalance: Decimal) async {
-        
         guard let bankAccountInfo = bankAccountInfo else { return }
+        
+        isLoading = true
+        defer { isLoading = false }
         
         let newBankAccount = BankAccount(
             id: bankAccountInfo.id,
@@ -58,13 +65,13 @@ final class BankAccountViewModel: ObservableObject {
             balance: newBalance,
             currency: bankAccountInfo.currency,
             createdAt: bankAccountInfo.createdAt,
-            updatedAt: bankAccountInfo.updatedAt
+            updatedAt: Date()
         )
         do {
-            try await  bankAccountService.updateBankAccount(newBankAccount)
-            try await loadBankAccountInfo()
+            try await bankAccountService.updateBankAccount(newBankAccount)
+            await loadBankAccountInfo()
         } catch {
-            print("cant save bank account")
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? "Неизвестная ошибка при обновлении баланса"
         }
     }
     

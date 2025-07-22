@@ -18,19 +18,17 @@ final class TransactionViewModel: ObservableObject {
             sortTransactions()
         }
     }
+    @Published var totalAmount: Decimal = 0
+    @Published var currency: String = CurrencyTypes.rub.symbol
+    @Published var errorMessage: String?
+    @Published var isLoading: Bool = false
     
     let direction: Direction
     let customDates: Bool
     
     private let transactionsService: TransactionsServiceProtocol = TransactionsService.shared
-    
-    private let categoriesService: CategoriesServiceProtocol = CategoriesService()
-    
-    //    var totalAmount: Decimal {
-    //        transactions.map { $0.amount }.reduce(0, +)
-    //    }
-    
-    @Published var totalAmount: Decimal = 0
+    private let categoriesService: CategoriesServiceProtocol = CategoriesService.shared
+    private let bankAccountService: BankAccountsServiceProtocol = BankAccountsService.shared
     
     init(direction: Direction, customDates: Bool = false) {
         self.direction = direction
@@ -53,6 +51,9 @@ final class TransactionViewModel: ObservableObject {
     }
     
     func fetchInfo() async {
+        isLoading = true
+        defer { isLoading = false }
+        
         do {
             let from = Calendar.current.startOfDay(for: startDate)
             let to = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: endDate) ?? endDate
@@ -60,7 +61,6 @@ final class TransactionViewModel: ObservableObject {
             let allTransactions = try await transactionsService.fetchTransactions(from: from, to: to)
             let categoriesArray = try await categoriesService.categories(direction: direction)
             self.categories = Dictionary(uniqueKeysWithValues: categoriesArray.map { ($0.id, $0) })
-            
             
             self.transactions = allTransactions.filter { transaction in
                 if let category = self.categories[transaction.categoryId] {
@@ -70,10 +70,12 @@ final class TransactionViewModel: ObservableObject {
             }
             self.totalAmount = self.transactions.map { $0.amount }.reduce(0, +)
             
+             let bankAccount = try await bankAccountService.getBankAccount()
+            self.currency =  bankAccount?.currency ?? "$"
             
             sortTransactions()
         } catch {
-            print("error with fetching transactions")
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? "Неизвестная ошибка при загрузке транзакций"
         }
     }
     

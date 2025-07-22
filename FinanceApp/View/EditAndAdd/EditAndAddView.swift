@@ -13,7 +13,6 @@ struct EditAndAddView: View {
     @FocusState private var isAmountFieldFocused: Bool
     @State private var showCategoryPicker = false
     
-    
     init(direction: Direction, transaction: Transaction? = nil) {
         _viewModel = StateObject(wrappedValue: EditAndAddViewModel(direction: direction, transaction: transaction))
     }
@@ -26,14 +25,10 @@ struct EditAndAddView: View {
                     Section {
                         categorySection
                         amountSection
-                        
                         HStack {
                             Text(Constants.date)
                             Spacer()
                             DatePicker("", selection: $viewModel.date, in: ...Date(), displayedComponents: .date)
-                                .background(Color.lightMain)
-                                .labelsHidden()
-                                .cornerRadius(Constants.cornerRadius)
                                 .background(Color.lightMain)
                                 .labelsHidden()
                                 .cornerRadius(Constants.cornerRadius)
@@ -62,6 +57,15 @@ struct EditAndAddView: View {
                         }
                     }
                 }
+                
+                if viewModel.isLoading {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .scaleEffect(1.5)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Color.black.opacity(0.2))
+                        .ignoresSafeArea()
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -82,6 +86,14 @@ struct EditAndAddView: View {
             }
             .alert(Constants.saveAlert, isPresented: $viewModel.showValidationAlert) {
                 Button(Constants.alertButton, role: .cancel) { }
+            }
+            .alert("ошибка", isPresented: Binding(
+                get: { viewModel.errorMessage != nil },
+                set: { _ in viewModel.errorMessage = nil }
+            )) {
+                Button("ок", role: .cancel) { }
+            } message: {
+                Text(viewModel.errorMessage ?? "оаоаоа а что говорить...")
             }
             .navigationTitle(viewModel.direction == .income ? Constants.income : Constants.outcome)
         }

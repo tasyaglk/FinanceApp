@@ -9,24 +9,25 @@ import Foundation
 
 @MainActor
 final class AnalysisViewModel: ObservableObject {
-    var transactions: [Transaction] = []
-    var categories: [Int: Category] = [:]
-    var startDate: Date
-    var endDate: Date
-    var sortOption: SortOption = .date {
+    @Published var transactions: [Transaction] = []
+    @Published var categories: [Int: Category] = [:]
+    @Published var startDate: Date
+    @Published var endDate: Date
+    @Published var sortOption: SortOption = .date {
         didSet {
             sortTransactions()
             onDataUpdate?()
         }
     }
+    @Published var errorMessage: String?
+    @Published var isLoading: Bool = false
     
     let direction: Direction
     let customDates: Bool
     var onDataUpdate: (() -> Void)?
     
     private let transactionsService: TransactionsServiceProtocol = TransactionsService.shared
-    
-    private let categoriesService: CategoriesServiceProtocol = CategoriesService()
+    private let categoriesService: CategoriesServiceProtocol = CategoriesService.shared
     
     var totalAmount: Decimal {
         transactions.map { $0.amount }.reduce(0, +)
@@ -53,6 +54,9 @@ final class AnalysisViewModel: ObservableObject {
     }
     
     func fetchInfo() async {
+        isLoading = true
+        defer { isLoading = false }
+        
         do {
             let from = Calendar.current.startOfDay(for: startDate)
             let to = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: endDate) ?? endDate
@@ -71,7 +75,7 @@ final class AnalysisViewModel: ObservableObject {
             sortTransactions()
             onDataUpdate?()
         } catch {
-            print("error with fetching transactions")
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? "Неизвестная ошибка при загрузке данных"
         }
     }
     
@@ -106,7 +110,7 @@ final class AnalysisViewModel: ObservableObject {
         guard totalAmount != 0 else {
             return "0%"
         }
-        let ratio = ((transaction.amount as NSDecimalNumber).doubleValue * 100) / (totalAmount as NSDecimalNumber).doubleValue 
+        let ratio = ((transaction.amount as NSDecimalNumber).doubleValue * 100) / (totalAmount as NSDecimalNumber).doubleValue
         return String(format: "%.2f%%", ratio)
     }
 }

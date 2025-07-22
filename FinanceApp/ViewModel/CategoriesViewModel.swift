@@ -9,7 +9,7 @@ import Foundation
 
 @MainActor
 final class CategoriesViewModel: ObservableObject {
-    private let categoriesService: CategoriesServiceProtocol = CategoriesService()
+    private let categoriesService: CategoriesServiceProtocol = CategoriesService.shared
     
     @Published var categories: [Category] = []
     @Published var searchText = "" {
@@ -17,8 +17,21 @@ final class CategoriesViewModel: ObservableObject {
             updateFilteredCategories()
         }
     }
-    
     @Published var filteredCategories: [Category] = []
+    @Published var errorMessage: String?
+    @Published var isLoading: Bool = false
+    
+    func fetchAllCategories() async {
+        isLoading = true
+        defer { isLoading = false }
+        
+        do {
+            self.categories = try await categoriesService.categories()
+            updateFilteredCategories()
+        } catch {
+            errorMessage = (error as? LocalizedError)?.errorDescription ?? "Неизвестная ошибка при загрузке категорий"
+        }
+    }
     
     private func updateFilteredCategories() {
         if searchText.isEmpty {
@@ -30,15 +43,6 @@ final class CategoriesViewModel: ObservableObject {
             filteredCategories = results.filter { $0.score > 0.2 }
                 .sorted { $0.score > $1.score }
                 .map { $0.category }
-        }
-    }
-    
-    func fetchAllCategories() async {
-        do {
-            self.categories = try await categoriesService.categories()
-            updateFilteredCategories()
-        } catch {
-            print("error with fetching categories")
         }
     }
     
