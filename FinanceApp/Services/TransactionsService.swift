@@ -67,17 +67,16 @@ final class TransactionsService: TransactionsServiceProtocol {
             case .success(let account):
                 switch await client.fetchTransactions(accountId: account.id, from: startDate, to: endDate) {
                 case .success(let networkTransactions):
+                    // Обновляем хранилище, очищая старое и вставляя новое
+                    let existing = try storage.fetchAll()
+                    for tx in existing {
+                        try? storage.delete(id: tx.id)
+                    }
                     for transaction in networkTransactions {
-                        try storage.create(transaction)
+                        try? storage.create(transaction)
                     }
-                    self.transactions = networkTransactions
-                    let backups = try storage.fetchBackup()
-                    for backup in backups {
-                        try storage.deleteBackup(id: backup.id)
-                    }
-                    return networkTransactions.filter {
-                        $0.transactionDate >= startDate && $0.transactionDate <= endDate
-                    }
+                    transactions = networkTransactions
+                    return transactions
                 case .failure(let error):
                     throw error
                 }
@@ -85,44 +84,32 @@ final class TransactionsService: TransactionsServiceProtocol {
                 throw TransactionsServiceError.accountNotFound
             }
         } catch {
-            let localTransactions = try storage.fetchAll()
-            let backupTransactions = try storage.fetchBackup().map { $0.transaction }
-            let allTransactions = (localTransactions + backupTransactions).removingDuplicates(by: \.id)
-            self.transactions = allTransactions
-            return allTransactions.filter {
-                $0.transactionDate >= startDate && $0.transactionDate <= endDate
-            }
+            let local = try storage.fetchAll()
+            let backup = try storage.fetchBackup().map { $0.transaction }
+            transactions = (local + backup).removingDuplicates(by: \ .id)
+            return transactions.filter { $0.transactionDate >= startDate && $0.transactionDate <= endDate }
         }
     }
     
     func createTransaction(_ transaction: Transaction) async throws {
-        if transactions.contains(where: { $0.id == transaction.id }) {
+        guard !transactions.contains(where: { $0.id == transaction.id }) else {
             throw TransactionsServiceError.transactionExists(id: transaction.id)
         }
         
         do {
             switch await client.createTransaction(transaction) {
             case .success:
-                try storage.create(transaction)
-                transactions.append(transaction)
-                try await updateAccountBalance(transaction: transaction)
-                try storage.deleteBackup(id: transaction.id)
-            case .failure(let error):
+                break
+            case .failure:
                 try storage.saveBackup(transaction, operationType: .create)
-                try storage.create(transaction)
-                transactions.append(transaction)
-                try await updateAccountBalance(transaction: transaction)
-                try await saveAccountBackup()
-                throw error
             }
         } catch {
             try storage.saveBackup(transaction, operationType: .create)
-            try storage.create(transaction)
-            transactions.append(transaction)
-            try await updateAccountBalance(transaction: transaction)
-            try await saveAccountBackup()
-            throw error
         }
+        
+        try storage.create(transaction)
+        transactions.append(transaction)
+        try await updateAccountBalance()
     }
     
     func updateTransaction(_ transaction: Transaction) async throws {
@@ -133,26 +120,17 @@ final class TransactionsService: TransactionsServiceProtocol {
         do {
             switch await client.updateTransaction(transaction) {
             case .success:
-                try storage.update(transaction)
-                transactions[index] = transaction
-                try await updateAccountBalance(transaction: transaction)
-                try storage.deleteBackup(id: transaction.id)
-            case .failure(let error):
+                try? storage.deleteBackup(id: transaction.id)
+            case .failure:
                 try storage.saveBackup(transaction, operationType: .update)
-                try storage.update(transaction)
-                transactions[index] = transaction
-                try await updateAccountBalance(transaction: transaction) // Update balance in offline mode
-                try await saveAccountBackup()
-                throw error
             }
         } catch {
             try storage.saveBackup(transaction, operationType: .update)
-            try storage.update(transaction)
-            transactions[index] = transaction
-            try await updateAccountBalance(transaction: transaction)
-            try await saveAccountBackup()
-            throw error
         }
+        
+        try storage.update(transaction)
+        transactions[index] = transaction
+        try await updateAccountBalance()
     }
     
     func deleteTransaction(withId id: Int) async throws {
@@ -165,26 +143,17 @@ final class TransactionsService: TransactionsServiceProtocol {
         do {
             switch await client.deleteTransaction(withId: id) {
             case .success:
-                try storage.delete(id: id)
-//                transactions.remove(at: index)
-                try await updateAccountBalance(transaction: transaction)
-                try storage.deleteBackup(id: id)
-            case .failure(let error):
-                try storage.saveBackup(transactions[index], operationType: .delete)
-                try storage.delete(id: id)
-                transactions.remove(at: index)
-                try await updateAccountBalance(transaction: transaction)
-                try await saveAccountBackup()
-                throw error
+                try? storage.deleteBackup(id: id)
+            case .failure:
+                try storage.saveBackup(transaction, operationType: .delete)
             }
         } catch {
-//            try storage.saveBackup(transactions[index], operationType: .delete)
-            try storage.delete(id: id)
-//            transactions.remove(at: index)
-            try await updateAccountBalance()
-            try await saveAccountBackup()
-            throw error
+            try storage.saveBackup(transaction, operationType: .delete)
         }
+        
+        try storage.delete(id: id)
+        transactions.remove(at: index)
+        try await updateAccountBalance()
     }
     
     func getId() -> Int {
@@ -195,23 +164,24 @@ final class TransactionsService: TransactionsServiceProtocol {
         let backups = try storage.fetchBackup()
         for backup in backups {
             let transaction = backup.transaction
-            switch BackupOperationType(rawValue: backup.operationType) {
-            case .create:
-                try await client.createTransaction(transaction)
+            guard let op = BackupOperationType(rawValue: backup.operationType) else { continue }
+            do {
+                switch op {
+                case .create:
+                    try await client.createTransaction(transaction)
+                case .update:
+                    try await client.updateTransaction(transaction)
+                case .delete:
+                    try await client.deleteTransaction(withId: transaction.id)
+                }
                 try storage.deleteBackup(id: transaction.id)
-            case .update:
-                try await client.updateTransaction(transaction)
-                try storage.deleteBackup(id: transaction.id)
-            case .delete:
-                try await client.deleteTransaction(withId: transaction.id)
-                try storage.deleteBackup(id: transaction.id)
-            case .none:
+            } catch {
                 continue
             }
         }
     }
     
-    private func updateAccountBalance(transaction: Transaction? = nil) async throws {
+    private func updateAccountBalance() async throws {
         var account: BankAccount?
         do {
             account = try await bankAccountsClient.getBankAccount().get()
@@ -219,54 +189,29 @@ final class TransactionsService: TransactionsServiceProtocol {
             account = try bankAccountStorage.getAccount()
         }
         
-        guard let account = account else {
+        guard var acc = account else {
             throw TransactionsServiceError.accountNotFound
         }
         
-        var updatedBalance = account.balance
-        if let transaction = transaction {
-            let categories = try await CategoriesService.shared.categories()
-            guard let category = categories.first(where: { $0.id == transaction.categoryId }) else {
-                throw TransactionsServiceError.invalidTransaction
-            }
-        } else {
-            let transactions = try storage.fetchAll()
-            let categories = try await CategoriesService.shared.categories()
-            updatedBalance = transactions.reduce(Decimal(0)) { balance, transaction in
-                guard let category = categories.first(where: { $0.id == transaction.categoryId }) else {
-                    return balance
-                }
-                let ans =  balance + (category.isIncome ? transaction.amount : -transaction.amount)
-                return ans
-            }
+        let all = try storage.fetchAll()
+        let categories = try await CategoriesService.shared.categories()
+        
+        let newBalance = all.reduce(Decimal(0)) { sum, tx in
+            guard let cat = categories.first(where: { $0.id == tx.categoryId }) else { return sum }
+            return sum + (cat.isIncome ? tx.amount : -tx.amount)
         }
         
         let updatedAccount = BankAccount(
-            id: account.id,
-            userId: account.userId,
-            name: account.name,
-            balance: updatedBalance,
-            currency: account.currency,
-            createdAt: account.createdAt,
-            updatedAt: Date()
+            id: acc.id, userId: acc.userId,
+            name: acc.name,
+            balance: newBalance,
+            currency: acc.currency,
+            createdAt: acc.createdAt,
+            updatedAt: acc.updatedAt
         )
         
-        try bankAccountStorage.update(updatedAccount)
-        try await BankAccountsService.shared.updateBankAccount(updatedAccount)
-    }
-    
-    private func saveAccountBackup() async throws {
-        var account: BankAccount?
-        do {
-            account = try await bankAccountsClient.getBankAccount().get()
-        } catch {
-            account = try bankAccountStorage.getAccount()
-        }
-        
-        guard let account = account else {
-            throw TransactionsServiceError.accountNotFound
-        }
-        try await BankAccountsService.shared.saveBackup(account, operationType: .update)
+        try bankAccountStorage.update(acc)
+        try await BankAccountsService.shared.updateBankAccount(acc)
     }
 }
 

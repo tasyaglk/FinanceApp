@@ -12,6 +12,7 @@ protocol BankAccountsServiceProtocol {
     func getBankAccount() async throws -> BankAccount?
     func updateBankAccount(_ account: BankAccount) async throws
     func saveBackup(_ account: BankAccount, operationType: BackupOperationType) throws
+    func updateLocal(_ account: BankAccount) throws
 }
 
 final class BankAccountsService: BankAccountsServiceProtocol {
@@ -32,18 +33,22 @@ final class BankAccountsService: BankAccountsServiceProtocol {
     }
     
     func getBankAccount() async throws -> BankAccount? {
-        try await syncBackup()
+        do {
+            try await syncBackup()
+        } catch {
+            print("Failed to sync with backup: \(error)")
+        }
         
         do {
             switch await client.getBankAccount() {
             case .success(let account):
-                    try storage.update(account)
+                try? storage.update(account)
                 return account
-            case .failure(let error):
-                throw error
+            case .failure:
+                return try? storage.getAccount()
             }
         } catch {
-            return try storage.getAccount()
+            return try? storage.getAccount()
         }
     }
     
@@ -65,12 +70,14 @@ final class BankAccountsService: BankAccountsServiceProtocol {
         }
     }
     
+    
     func saveBackup(_ account: BankAccount, operationType: BackupOperationType) throws {
         try storage.saveBackup(account, operationType: operationType)
     }
     
     private func syncBackup() async throws {
         let backups = try storage.fetchBackup()
+        
         for backup in backups {
             let account = BankAccount(
                 id: backup.transaction.id,
@@ -81,13 +88,46 @@ final class BankAccountsService: BankAccountsServiceProtocol {
                 createdAt: backup.transaction.createdAt,
                 updatedAt: backup.transaction.updatedAt
             )
+            
             switch BackupOperationType(rawValue: backup.operationType) {
             case .update:
-                try await client.updateBankAccount(account)
-                try storage.deleteBackup(id: account.id)
+                do {
+                    _ = try await client.updateBankAccount(account)
+                    try storage.deleteBackup(id: account.id)
+                } catch {
+                    continue
+                }
             case .create, .delete, .none:
                 continue
             }
         }
+    }
+    
+    func recalculateBalance(using transactions: [Transaction], categories: [Category], currentAccount: BankAccount?) async throws -> BankAccount {
+        let newBalance = transactions.reduce(Decimal(0)) { partialResult, tx in
+            guard let cat = categories.first(where: { $0.id == tx.categoryId }) else { return partialResult }
+            return partialResult + (cat.isIncome ? tx.amount : -tx.amount)
+        }
+        
+        let account = BankAccount(
+            id: currentAccount?.id ?? UUID().hashValue,
+            userId: currentAccount?.userId ?? 0,
+            name: currentAccount?.name ?? "Default Account",
+            balance: newBalance,
+            currency: currentAccount?.currency ?? "$",
+            createdAt: currentAccount?.createdAt ?? Date(),
+            updatedAt: Date()
+        )
+        
+        do {
+            try await updateBankAccount(account)
+        } catch {
+        }
+        
+        return account
+    }
+    
+    func updateLocal(_ account: BankAccount) throws {
+        try storage.update(account)
     }
 }

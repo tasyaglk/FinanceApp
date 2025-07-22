@@ -45,6 +45,12 @@ struct BankAccountView: View {
                         .ignoresSafeArea()
                 }
             }
+            .refreshable {
+                await viewModel.loadBankAccountInfo()
+            }
+            .task {
+                await viewModel.loadBankAccountInfo()
+            }
             .alert(Constants.alertTitle, isPresented: $viewModel.showInvalidBalanceAlert) {
                 Button(Constants.alertButton, role: .cancel) { }
             } message: {
@@ -59,12 +65,6 @@ struct BankAccountView: View {
                 Text(viewModel.errorMessage ?? "оаоаоа а что говорить...")
             }
             .scrollDismissesKeyboard(.immediately)
-            .refreshable {
-                await viewModel.loadBankAccountInfo()
-            }
-            .task {
-                await viewModel.loadBankAccountInfo()
-            }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {

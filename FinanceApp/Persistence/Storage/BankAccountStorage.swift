@@ -31,6 +31,7 @@ final class BankAccountStorage: BankAccountStorageProtocol {
     func update(_ account: BankAccount) throws {
         let predicate = #Predicate<PersistentBankAccount> { $0.id == account.id }
         let descriptor = FetchDescriptor<PersistentBankAccount>(predicate: predicate)
+        
         if let existingAccount = try modelContext.fetch(descriptor).first {
             existingAccount.name = account.name
             existingAccount.balance = account.balance
@@ -40,14 +41,33 @@ final class BankAccountStorage: BankAccountStorageProtocol {
             let persistentAccount = PersistentBankAccount(account: account)
             modelContext.insert(persistentAccount)
         }
+
         try modelContext.save()
     }
-    
+
     func saveBackup(_ account: BankAccount, operationType: BackupOperationType) throws {
-        let backup = BackupTransaction(id: account.id, operationType: operationType, transaction: Transaction(id: account.id, accountId: account.id, categoryId: 0, amount: account.balance, transactionDate: account.updatedAt, createdAt: account.createdAt, updatedAt: account.updatedAt))
+        let predicate = #Predicate<BackupTransaction> { $0.id == account.id }
+        let descriptor = FetchDescriptor<BackupTransaction>(predicate: predicate)
+        let existing = try modelContext.fetch(descriptor)
+        existing.forEach { modelContext.delete($0) }
+
+        let backup = BackupTransaction(
+            id: account.id,
+            operationType: operationType,
+            transaction: Transaction(
+                id: account.id,
+                accountId: account.id,
+                categoryId: 0,
+                amount: account.balance,
+                transactionDate: account.updatedAt,
+                createdAt: account.createdAt,
+                updatedAt: account.updatedAt
+            )
+        )
         modelContext.insert(backup)
         try modelContext.save()
     }
+
     
     func fetchBackup() throws -> [BackupTransaction] {
         let descriptor = FetchDescriptor<BackupTransaction>()

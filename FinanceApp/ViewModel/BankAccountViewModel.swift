@@ -22,7 +22,11 @@ final class BankAccountViewModel: ObservableObject {
         defer { isLoading = false }
         
         do {
-            bankAccountInfo = try await bankAccountService.getBankAccount()
+            if let account = try await bankAccountService.getBankAccount() {
+                bankAccountInfo = account
+            } else {
+                errorMessage = "Нет сохранённого счета, и сеть недоступна"
+            }
         } catch {
             errorMessage = (error as? LocalizedError)?.errorDescription ?? "Неизвестная ошибка при загрузке счета"
         }
@@ -67,13 +71,16 @@ final class BankAccountViewModel: ObservableObject {
             createdAt: bankAccountInfo.createdAt,
             updatedAt: Date()
         )
+        
         do {
             try await bankAccountService.updateBankAccount(newBankAccount)
-            await loadBankAccountInfo()
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "Неизвестная ошибка при обновлении баланса"
+            try? bankAccountService.updateLocal(newBankAccount)
         }
+        await loadBankAccountInfo()
+        
     }
+    
     
     func saveChanges(newBalanceText: String) async {
         let cleanNewBalanceText = newBalanceText.replacingOccurrences(of: ",", with: ".")

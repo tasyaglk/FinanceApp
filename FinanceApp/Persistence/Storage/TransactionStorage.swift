@@ -16,6 +16,7 @@ protocol TransactionStorageProtocol {
     func saveBackup(_ transaction: Transaction, operationType: BackupOperationType) throws
     func fetchBackup() throws -> [BackupTransaction]
     func deleteBackup(id: Int) throws
+    func exists(id: Int) throws -> Bool
 }
 
 final class TransactionStorage: TransactionStorageProtocol {
@@ -85,5 +86,11 @@ final class TransactionStorage: TransactionStorageProtocol {
         let backups = try modelContext.fetch(descriptor)
         backups.forEach { modelContext.delete($0) }
         try modelContext.save()
+    }
+    
+    func exists(id: Int) throws -> Bool {
+        let predicate = #Predicate<PersistentTransaction> { $0.id == id }
+        let descriptor = FetchDescriptor<PersistentTransaction>(predicate: predicate)
+        return try !modelContext.fetch(descriptor).isEmpty
     }
 }
