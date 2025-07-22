@@ -160,25 +160,27 @@ final class TransactionsService: TransactionsServiceProtocol {
             throw TransactionsServiceError.transactionNotFound(id: id)
         }
         
+        let transaction = transactions[index]
+        
         do {
             switch await client.deleteTransaction(withId: id) {
             case .success:
                 try storage.delete(id: id)
-                transactions.remove(at: index)
-                try await updateAccountBalance()
+//                transactions.remove(at: index)
+                try await updateAccountBalance(transaction: transaction)
                 try storage.deleteBackup(id: id)
             case .failure(let error):
                 try storage.saveBackup(transactions[index], operationType: .delete)
                 try storage.delete(id: id)
                 transactions.remove(at: index)
-                try await updateAccountBalance() // Update balance in offline mode
+                try await updateAccountBalance(transaction: transaction)
                 try await saveAccountBackup()
                 throw error
             }
         } catch {
-            try storage.saveBackup(transactions[index], operationType: .delete)
+//            try storage.saveBackup(transactions[index], operationType: .delete)
             try storage.delete(id: id)
-            transactions.remove(at: index)
+//            transactions.remove(at: index)
             try await updateAccountBalance()
             try await saveAccountBackup()
             throw error
