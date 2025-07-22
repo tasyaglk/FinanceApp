@@ -48,12 +48,14 @@ final class BankAccountViewModel: ObservableObject {
             createdAt: bankAccountInfo.createdAt,
             updatedAt: Date()
         )
+        
         do {
             try await bankAccountService.updateBankAccount(newBankAccount)
-            await loadBankAccountInfo()
         } catch {
-            errorMessage = (error as? LocalizedError)?.errorDescription ?? "Неизвестная ошибка при обновлении валюты"
+            try? bankAccountService.updateLocal(newBankAccount)
         }
+        await loadBankAccountInfo()
+
     }
     
     func updateBalanceInfo(_ newBalance: Decimal) async {
