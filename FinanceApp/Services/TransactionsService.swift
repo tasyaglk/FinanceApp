@@ -60,11 +60,11 @@ final class TransactionsService: TransactionsServiceProtocol {
     }
     
     func fetchTransactions(from startDate: Date, to endDate: Date) async throws -> [Transaction] {
-        try await syncBackupTransactions()
         
         do {
             switch await bankAccountsClient.getBankAccount() {
             case .success(let account):
+                try await syncBackupTransactions()
                 switch await client.fetchTransactions(accountId: account.id, from: startDate, to: endDate) {
                 case .success(let networkTransactions):
                     let existing = try storage.fetchAll()
@@ -187,18 +187,20 @@ final class TransactionsService: TransactionsServiceProtocol {
             do {
                 switch op {
                 case .create:
-                    try await client.createTransaction(transaction)
+                    _ = await client.createTransaction(transaction)
                 case .update:
-                    try await client.updateTransaction(transaction)
+                    _ = await client.updateTransaction(transaction)
                 case .delete:
-                    try await client.deleteTransaction(withId: transaction.id)
+                    _ = await client.deleteTransaction(withId: transaction.id)
                 }
                 try storage.deleteBackup(id: transaction.id)
             } catch {
+                print("failed to sync transaction \(transaction.id): \(error)")
                 continue
             }
         }
     }
+
     
     private func updateAccountBalance() async throws {
         var account: BankAccount?
