@@ -7,6 +7,7 @@
 
 import UIKit
 import SwiftUI
+import PieChart
 
 class AnalysisViewController: UIViewController {
     private let viewModel: AnalysisViewModel
@@ -18,6 +19,7 @@ class AnalysisViewController: UIViewController {
     private let startDatePicker = UIDatePicker()
     private let endDatePicker = UIDatePicker()
     private let sortSegmentedControl = UISegmentedControl(items: SortOption.allCases.map { $0.rawValue })
+    private let chartView = PieChartView()
     
     init(direction: Direction, startDate: Date, endDate: Date) {
         self.viewModel = AnalysisViewModel(direction: direction, customDates: true)
@@ -95,6 +97,7 @@ class AnalysisViewController: UIViewController {
         tableView.register(DatePickerCell.self, forCellReuseIdentifier: "DateCell")
         tableView.register(SortPickerCell.self, forCellReuseIdentifier: "SortCell")
         tableView.register(TotalCell.self, forCellReuseIdentifier: "TotalCell")
+        tableView.register(PieChartCell.self, forCellReuseIdentifier: "PieChartCell")
         tableView.register(TransactionTableViewCell.self, forCellReuseIdentifier: "TransactionCell")
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -156,7 +159,7 @@ extension AnalysisViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return 4
+            return 5
         } else {
             return viewModel.transactions.count
         }
@@ -204,9 +207,15 @@ extension AnalysisViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.configure(title: Constants.amountTitle, total: viewModel.totalAmount)
                 cell.selectionStyle = .none
                 return cell
+            case 4:
+                let cell = tableView.dequeueReusableCell(withIdentifier: "PieChartCell", for: indexPath) as! PieChartCell
+                cell.configure(with: viewModel.transactionToPieChartEntities())
+                cell.selectionStyle = .none
+                return cell
             default:
                 return UITableViewCell()
             }
+            
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "TransactionCell", for: indexPath) as! TransactionTableViewCell
             let transaction = viewModel.transactions[indexPath.row]
@@ -232,4 +241,12 @@ extension AnalysisViewController: UITableViewDelegate, UITableViewDataSource {
         let hostingController = UIHostingController(rootView: editView)
         navigationController?.pushViewController(hostingController, animated: true)
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 0 && indexPath.row == 4 {
+            return 280
+        }
+        return UITableView.automaticDimension
+    }
+    
 }
