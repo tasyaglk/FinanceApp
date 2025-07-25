@@ -215,7 +215,7 @@ extension AnalysisViewController: UITableViewDelegate, UITableViewDataSource {
             default:
                 return UITableViewCell()
             }
-
+            
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "TransactionCell", for: indexPath) as! TransactionTableViewCell
             let transaction = viewModel.transactions[indexPath.row]
@@ -241,4 +241,12 @@ extension AnalysisViewController: UITableViewDelegate, UITableViewDataSource {
         let hostingController = UIHostingController(rootView: editView)
         navigationController?.pushViewController(hostingController, animated: true)
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 0 && indexPath.row == 4 {
+            return 280
+        }
+        return UITableView.automaticDimension
+    }
+    
 }

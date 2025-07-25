@@ -34,24 +34,6 @@ final class AnalysisViewModel: ObservableObject {
         transactions.map { $0.amount }.reduce(0, +)
     }
     
-    //    var chartEntities: [Entity] {
-    //        sortTransactions()
-    //        let total = totalAmount
-    //        guard total > 0 else { return [] }
-    //
-    //        var grouped: [String: Decimal] = [:]
-    //
-    //        for transaction in transactions {
-    //            let label = categories[transaction.categoryId]?.name ?? "?"
-    //            grouped[label, default: 0] += transaction.amount
-    //        }
-    //
-    //        return grouped.map { label, amount in
-    //            Entity(value: amount, label: label)
-    //        }
-    //    }
-    
-    
     init(direction: Direction, customDates: Bool = false) {
         self.direction = direction
         self.customDates = customDates
