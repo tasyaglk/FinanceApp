@@ -209,7 +209,7 @@ extension AnalysisViewController: UITableViewDelegate, UITableViewDataSource {
                 return cell
             case 4:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "PieChartCell", for: indexPath) as! PieChartCell
-                cell.configure(with: viewModel.chartEntities)
+                cell.configure(with: viewModel.transactionToPieChartEntities())
                 cell.selectionStyle = .none
                 return cell
             default:

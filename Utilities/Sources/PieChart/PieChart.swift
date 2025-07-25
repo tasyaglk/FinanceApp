@@ -52,6 +52,8 @@ public class PieChartView: UIView {
     }
 
     private func prepareSlices() {
+        print(entities)
+        print("huihuihiu")
         let total = entities.reduce(Decimal(0)) { $0 + $1.value }
         guard total > 0 else {
             slices = []

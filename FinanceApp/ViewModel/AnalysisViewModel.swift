@@ -34,22 +34,23 @@ final class AnalysisViewModel: ObservableObject {
         transactions.map { $0.amount }.reduce(0, +)
     }
     
-    var chartEntities: [Entity] {
-        let total = totalAmount
-        guard total > 0 else { return [] }
-        
-        var grouped: [String: Decimal] = [:]
-        
-        for transaction in transactions {
-            let label = categories[transaction.categoryId]?.name ?? "?"
-            grouped[label, default: 0] += transaction.amount
-        }
-
-        return grouped.map { label, amount in
-            Entity(value: amount, label: label)
-        }
-    }
-
+    //    var chartEntities: [Entity] {
+    //        sortTransactions()
+    //        let total = totalAmount
+    //        guard total > 0 else { return [] }
+    //
+    //        var grouped: [String: Decimal] = [:]
+    //
+    //        for transaction in transactions {
+    //            let label = categories[transaction.categoryId]?.name ?? "?"
+    //            grouped[label, default: 0] += transaction.amount
+    //        }
+    //
+    //        return grouped.map { label, amount in
+    //            Entity(value: amount, label: label)
+    //        }
+    //    }
+    
     
     init(direction: Direction, customDates: Bool = false) {
         self.direction = direction
@@ -130,5 +131,28 @@ final class AnalysisViewModel: ObservableObject {
         }
         let ratio = ((transaction.amount as NSDecimalNumber).doubleValue * 100) / (totalAmount as NSDecimalNumber).doubleValue
         return String(format: "%.2f%%", ratio)
+    }
+    
+    func transactionToPieChartEntities() -> [Entity] {
+        sortTransactions()
+        let total = transactions.reduce(0) { $0 + $1.amount }
+        guard total > 0 else { return [] }
+        
+        var entities: [Entity] = []
+        
+        let topFive = transactions.prefix(5)
+        for transaction in topFive {
+            let label = categories[transaction.categoryId]?.name ?? "?"
+            let value = transaction.amount
+            entities.append(Entity(value: value, label: label))
+        }
+        
+        let others = transactions.dropFirst(5)
+        let othersSum = others.reduce(Decimal(0)) { $0 + $1.amount }
+        
+        if othersSum > 0 {
+            entities.append(Entity(value: othersSum, label: "Остальные"))
+        }
+        return entities
     }
 }
