@@ -13,6 +13,7 @@ struct BankAccountView: View {
     @State private var editingBalanceText: String = ""
     @FocusState private var isBalanceFieldFocused: Bool
     @State private var isSpoilerOn = false
+    @StateObject private var chartViewModel = BalanceChartViewModel()
     
     var body: some View {
         NavigationStack {
@@ -30,8 +31,16 @@ struct BankAccountView: View {
                             currencySection
                         }
                         .listRowBackground(viewModel.isEditing ? .white : Color.lightMain)
+                        
+                        if !viewModel.isEditing {
+                            Section {
+                                BalanceChartView(viewModel: chartViewModel, isEditing: viewModel.isEditing)
+                                    .frame(height: 220)
+                            }
+                            .listRowBackground(Color.clear)
+                        }
                     }
-                    .listSectionSpacing(16)
+                    
                     
                     Spacer()
                 }
@@ -50,6 +59,7 @@ struct BankAccountView: View {
             }
             .task {
                 await viewModel.loadBankAccountInfo()
+                await chartViewModel.loadData()
             }
             .alert(Constants.alertTitle, isPresented: $viewModel.showInvalidBalanceAlert) {
                 Button(Constants.alertButton, role: .cancel) { }
@@ -75,6 +85,9 @@ struct BankAccountView: View {
                         } else {
                             viewModel.isEditing = true
                             editingBalanceText = "\(viewModel.bankAccountInfo?.balance ?? 0)"
+                            Task {
+                                await chartViewModel.loadData()
+                            }
                         }
                     }) {
                         Text(viewModel.isEditing ? Constants.saveButtonTitle : Constants.editButtonTitle)
