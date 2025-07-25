@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import PieChart
 
 @MainActor
 final class AnalysisViewModel: ObservableObject {
@@ -32,6 +33,23 @@ final class AnalysisViewModel: ObservableObject {
     var totalAmount: Decimal {
         transactions.map { $0.amount }.reduce(0, +)
     }
+    
+    var chartEntities: [Entity] {
+        let total = totalAmount
+        guard total > 0 else { return [] }
+        
+        var grouped: [String: Decimal] = [:]
+        
+        for transaction in transactions {
+            let label = categories[transaction.categoryId]?.name ?? "?"
+            grouped[label, default: 0] += transaction.amount
+        }
+
+        return grouped.map { label, amount in
+            Entity(value: amount, label: label)
+        }
+    }
+
     
     init(direction: Direction, customDates: Bool = false) {
         self.direction = direction
