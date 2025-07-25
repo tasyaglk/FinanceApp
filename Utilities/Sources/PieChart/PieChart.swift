@@ -76,7 +76,7 @@ public class PieChartView: UIView {
         let ringThickness: CGFloat = 8.0
         
         context?.translateBy(x: center.x, y: center.y)
-        context?.rotate(by: .pi * animationProgress)
+        context?.rotate(by: 2 * .pi * animationProgress)
         context?.translateBy(x: -center.x, y: -center.y)
         
         var startAngle = -CGFloat.pi / 2
