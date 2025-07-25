@@ -108,7 +108,7 @@ public class PieChartView: UIView {
         
         for (i, slice) in slices.enumerated() {
             let yOffset = CGFloat(i) * spacing - spacing * CGFloat(slices.count - 1) / 2
-            let legendOffsetX: CGFloat = 70
+            let legendOffsetX: CGFloat = 90
             let circleCenter = CGPoint(x: center.x - legendOffsetX, y: center.y + yOffset)
             
             
