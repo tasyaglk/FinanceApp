@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0018041B2E31B3FD004EFF1C /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 0018041A2E31B3FD004EFF1C /* Lottie */; };
+		00420A692E3304C800D7B378 /* PieChart in Frameworks */ = {isa = PBXBuildFile; productRef = 00420A682E3304C800D7B378 /* PieChart */; };
+		00420A6B2E3304C800D7B378 /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = 00420A6A2E3304C800D7B378 /* Utilities */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +71,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00420A692E3304C800D7B378 /* PieChart in Frameworks */,
+				00420A6B2E3304C800D7B378 /* Utilities in Frameworks */,
 				0018041B2E31B3FD004EFF1C /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -132,6 +136,8 @@
 			name = FinanceApp;
 			packageProductDependencies = (
 				0018041A2E31B3FD004EFF1C /* Lottie */,
+				00420A682E3304C800D7B378 /* PieChart */,
+				00420A6A2E3304C800D7B378 /* Utilities */,
 			);
 			productName = FinanceApp;
 			productReference = 00A51BC52DF9B0D000BE0122 /* FinanceApp.app */;
@@ -217,6 +223,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				001804192E31B3FD004EFF1C /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				00420A672E3304C800D7B378 /* XCLocalSwiftPackageReference "../Utilities" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 00A51BC62DF9B0D000BE0122 /* Products */;
@@ -576,6 +583,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		00420A672E3304C800D7B378 /* XCLocalSwiftPackageReference "../Utilities" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../Utilities;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		001804192E31B3FD004EFF1C /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -592,6 +606,14 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 001804192E31B3FD004EFF1C /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
+		};
+		00420A682E3304C800D7B378 /* PieChart */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PieChart;
+		};
+		00420A6A2E3304C800D7B378 /* Utilities */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Utilities;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
