@@ -10,6 +10,7 @@
 		0018041B2E31B3FD004EFF1C /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 0018041A2E31B3FD004EFF1C /* Lottie */; };
 		00420A6E2E33060B00D7B378 /* PieChart in Frameworks */ = {isa = PBXBuildFile; productRef = 00420A6D2E33060B00D7B378 /* PieChart */; };
 		00420A702E33060B00D7B378 /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = 00420A6F2E33060B00D7B378 /* Utilities */; };
+		00420BA92E332D8D00D7B378 /* LottieAnimation in Frameworks */ = {isa = PBXBuildFile; productRef = 00420BA82E332D8D00D7B378 /* LottieAnimation */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00420BA92E332D8D00D7B378 /* LottieAnimation in Frameworks */,
 				00420A6E2E33060B00D7B378 /* PieChart in Frameworks */,
 				00420A702E33060B00D7B378 /* Utilities in Frameworks */,
 				0018041B2E31B3FD004EFF1C /* Lottie in Frameworks */,
@@ -138,6 +140,7 @@
 				0018041A2E31B3FD004EFF1C /* Lottie */,
 				00420A6D2E33060B00D7B378 /* PieChart */,
 				00420A6F2E33060B00D7B378 /* Utilities */,
+				00420BA82E332D8D00D7B378 /* LottieAnimation */,
 			);
 			productName = FinanceApp;
 			productReference = 00A51BC52DF9B0D000BE0122 /* FinanceApp.app */;
@@ -224,6 +227,7 @@
 			packageReferences = (
 				001804192E31B3FD004EFF1C /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				00420A6C2E33060B00D7B378 /* XCLocalSwiftPackageReference "Utilities" */,
+				00420BA72E332D8D00D7B378 /* XCLocalSwiftPackageReference "LottieAnimation" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 00A51BC62DF9B0D000BE0122 /* Products */;
@@ -588,6 +592,10 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Utilities;
 		};
+		00420BA72E332D8D00D7B378 /* XCLocalSwiftPackageReference "LottieAnimation" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = LottieAnimation;
+		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -614,6 +622,10 @@
 		00420A6F2E33060B00D7B378 /* Utilities */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Utilities;
+		};
+		00420BA82E332D8D00D7B378 /* LottieAnimation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LottieAnimation;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

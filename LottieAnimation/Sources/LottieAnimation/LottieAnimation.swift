@@ -1,18 +1,20 @@
-//
-//  Lottie.swift
-//  FinanceApp
-//
-//  Created by Тася Галкина on 24.07.2025.
-//
+// The Swift Programming Language
+// https://docs.swift.org/swift-book
 
 import SwiftUI
 import Lottie
 
-struct LottieView: UIViewRepresentable {
+public struct LottieView: UIViewRepresentable {
     let animationName: String
     var completion: (() -> Void)? = nil
+    
+    public init(animationName: String, completion: (() -> Void)? = nil) {
+            self.animationName = animationName
+            self.completion = completion
+        }
 
-    func makeUIView(context: Context) -> some UIView {
+
+    public func makeUIView(context: Context) -> some UIView {
         let view = UIView()
         let animationView = LottieAnimationView(name: animationName)
         animationView.contentMode = .scaleAspectFit
@@ -35,7 +37,7 @@ struct LottieView: UIViewRepresentable {
         return view
     }
 
-    func updateUIView(_ uiView: UIViewType, context: Context) {
+    public func updateUIView(_ uiView: UIViewType, context: Context) {
         
     }
 }

@@ -6,21 +6,20 @@
 //
 
 import SwiftUI
+import LottieAnimation
 
 struct StartView: View {
     @State private var isFinished = false
-
+    
     var body: some View {
-        Group {
-            if isFinished {
-                TabBarView()
-            } else {
-                LottieView(animationName: "animation") {
-                    isFinished = true
-                }
-                .ignoresSafeArea()
-                .background(Color.white)
+        if isFinished {
+            TabBarView()
+        } else {
+            LottieView(animationName: "animation") {
+                isFinished = true
             }
+            .ignoresSafeArea()
+            .background(Color.white)
         }
     }
 }
